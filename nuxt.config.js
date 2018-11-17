@@ -5,8 +5,13 @@ require("dotenv").config({
   path: process.env.NODE_ENV === "production" ? ".prod.env" : ".dev.env"
 })
 
+const PORT = process.env.PORT || 8100
+const HOST = process.env.HOST || "localhost"
+const BASE_URL = process.env.API_URL || `http://${HOST}:${PORT}/`
+
 module.exports = {
   axios: {
+    baseURL: BASE_URL,
     retry: { retries: 3 }
   },
   build: {
@@ -18,10 +23,6 @@ module.exports = {
     { src: "vuetify/dist/vuetify.min.css", lang: "css" }
     // { src: '~/assets/style/app.styl', lang: 'styl' }
   ],
-  env: {
-    HOST: process.env.HOST || "localhost",
-    PORT: process.env.PORT || 80
-  },
   head: {
     title: "Nuxt FullStack Boiler",
     meta: [
@@ -40,11 +41,49 @@ module.exports = {
   },
   modules: [
     "@nuxtjs/axios",
-    "@nuxtjs/component-cache"
+    "@nuxtjs/component-cache",
+    ["nuxt-i18n", {
+      // Options
+      locales: [
+        { code: "en", iso: "en-US" },
+        { code: "zh", iso: "zh-CN" },
+        { code: "es", iso: "es-ES" }
+      ],
+      // locales: [
+      //   {
+      //     code: "en",
+      //     iso: 'en-US',
+      //     name: "English"
+      //   },
+      //   {
+      //     code: "zh",
+      //     iso: "zh-CN",
+      //     name: "Chinese"
+      //   }
+      // ],
+      defaultLocale: "en",
+      routes: {
+        about: {
+          zh: "/a-propos",
+          en: "/about-us"
+        },
+        posts: {
+          zh: "/articles"
+        }
+      },
+      vueI18n: {
+        fallbackLocale: "en",
+        messages: {
+          en: {},
+          zh: {}
+        }
+      }
+    }]
   ],
   plugins: [
-    "~/plugins/vuetify.js",
-    "~/plugins/filter.js"
+    "~/plugins/filter.js",
+    "~/plugins/mixins.js",
+    "~/plugins/vuetify.js"
   ],
   render: {
     static: {

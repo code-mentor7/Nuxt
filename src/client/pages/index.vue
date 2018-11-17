@@ -11,9 +11,10 @@
         xl6>
         <v-container align="center">
           <h3 class="text-xs-center">{{ hey }}</h3>
+          <h3 class="text-xs-center">{{ dude }}</h3>
           <h1 class="font-enforce">Home</h1>
           <p>This page uses the default layout which is a Vue component with a sidebar</p>
-          <p>API Response: {{ apiData }}</p>
+          <p style="height: 1000px">API Response: {{ apiData }}</p>
         </v-container>
       </v-flex>
     </v-layout>
@@ -25,7 +26,8 @@
 export default {
   async asyncData ({ app }) {
     const hey = await app.$axios.$get("/api")
-    return { hey }
+    const dude = await app.$axios.$get("/api/users")
+    return { hey, dude }
   },
   head () {
     return {

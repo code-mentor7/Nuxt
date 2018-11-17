@@ -1,7 +1,10 @@
 <template>
   <v-app id="inspire">
     <top-nav />
-    <v-content app>
+    <v-content
+      :class="contentClass()"
+      app
+    >
       <snackbar />
       <nuxt/>
     </v-content>
@@ -21,49 +24,23 @@ export default {
     Snackbar,
     TopNav
   },
-  props: {
-    source: String
-  },
-  data () {
-    return {
-      drawer: null,
-      items: [
-        {
-          action: "android",
-          title: "Something",
-          items: [
-            { title: "First" },
-            { title: "Second" },
-            { title: "Third" }
-          ]
-        },
-        {
-          action: "settings",
-          title: "Settings",
-          items: [
-            { title: "Payment" },
-            { title: "Account" },
-            { title: "Privacy" }
-          ]
-        }
-      ],
-      name: "vueniverse",
-      mini: true,
-      right: null
-    }
-  },
-  computed: {
-    snackbar: {
-      get () {
-        return this.$store.state.notification.snackbar
-      },
-      set (value) {
-        this.$store.commit("notification/UPDATE_SNACKBAR", value)
+  methods: {
+    contentClass () {
+      let contentClass = ""
+      if (this.checkPathForContentClass()) {
+        contentClass = "pa-0"
       }
+      return contentClass
     },
-    snackbarColor () {
-      return "red"
-      // return this.$store.state.notification.context
+    checkPathForContentClass () {
+      return (
+        this.$route.path === "/" ||
+        this.$route.path === "/signin" ||
+        this.$route.path === "/signup" ||
+        this.$route.path === "/forgot-password" ||
+        this.$route.path === "/resend-verification" ||
+        this.$route.path.indexOf("reset-password") !== -1
+      )
     }
   }
 }
