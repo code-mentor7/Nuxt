@@ -19,8 +19,8 @@ module.exports = {
     // { src: '~/assets/style/app.styl', lang: 'styl' }
   ],
   env: {
-    HOST: process.env.HOST,
-    PORT: process.env.PORT
+    HOST: process.env.HOST || "localhost",
+    PORT: process.env.PORT || 80
   },
   head: {
     title: "Nuxt FullStack Boiler",

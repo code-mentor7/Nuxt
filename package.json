@@ -10,7 +10,8 @@
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "lintfix": "eslint . --ext .js,.vue --ignore-path .gitignore . --fix",
     "start": "cross-env NODE_ENV=production node ./dist/server/main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "npm run build"
   },
   "author": "Wong Vi Lip <wongvilip@gmail.com>",
   "private": true,

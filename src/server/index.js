@@ -27,6 +27,8 @@ config.dev = !(process.env.NODE_ENV === "production")
 
 // Init Nuxt.js
 const nuxt = new Nuxt(config)
+const PORT = process.env.PORT || 80
+const HOST = process.env.HOST || "localhost"
 
 // Build only in dev mode
 if (config.dev) {
@@ -44,9 +46,9 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true })
     console.warn("err at mongo connect", err.message)
   })
 
-app.listen(process.env.PORT, process.env.HOST, err => {
+app.listen(PORT, HOST, err => {
   if (err) { console.log(err) }
-  console.log(`Server listening on http://${process.env.HOST}:${process.env.PORT}`)
+  console.log(`Server listening on http://${HOST}:${PORT}`)
 })
 
 export default app
