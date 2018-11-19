@@ -75,7 +75,7 @@
             </v-card-text>
             <v-card-actions>
               <v-btn
-                :to="{name:'SignUp'}"
+                :to="{name:`signup___${$i18n.locale}`}"
                 class="primary--text"
                 flat
                 exact
@@ -103,8 +103,8 @@ import {
 import { validationMixin } from "vuelidate"
 
 export default {
-  middleware: ["guest-only"],
   auth: false,
+  middleware: ["guest-only"],
   mixins: [ validationMixin ],
   data () {
     return {
@@ -197,12 +197,4 @@ export default {
 </script>
 
 <style >
-.signin-bg{
-    min-height: 30em;
-    background-image: url("~assets/img/signin-bg.jpg") !important;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-
 </style>

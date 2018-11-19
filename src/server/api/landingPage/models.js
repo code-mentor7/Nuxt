@@ -1,20 +1,6 @@
 import mongoose from "mongoose"
 
 const landingPageSchema = new mongoose.Schema({
-  "created_at": {
-    type: Date,
-    label: "Created At",
-    autoValue () {
-      return new Date()
-    }
-  },
-  "updated_at": {
-    type: Date,
-    label: "Updated At",
-    autoValue () {
-      return new Date()
-    }
-  },
   "main_carousel": {
     type: Array,
     optional: true,
@@ -72,17 +58,16 @@ const landingPageSchema = new mongoose.Schema({
     optional: true
   }
 }, {
-  timestamps: true
+  timestamps: true,
+  createdAt: "created_at",
+  updatedAt: "updated_at"
 })
 
 const LandingPage = mongoose.model("LandingPage", landingPageSchema, "landing_page")
 
-// don't ever return password on creation.
-landingPageSchema.set("toJSON", {
-  transform (doc, ret, options) {
-    // delete ret.password
-    return ret
-  }
+landingPageSchema.pre("save", function (next) {
+  this._id = this._id.toString()
+  next()
 })
 
 export default LandingPage

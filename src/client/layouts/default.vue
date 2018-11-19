@@ -13,7 +13,7 @@
 </template>
 
 <script>
-
+// TODO: Setup Different layout for differen pages, no footer, transparent nav, etc
 import BottomFooter from "~/components/BottomFooter.vue"
 import Snackbar from "~/components/Snackbar.vue"
 import TopNav from "~/components/TopNav.vue"
@@ -50,8 +50,11 @@ export default {
 </script>
 
 <style>
-/* .primary--text {
-  color: #40c4ff !important;
-  caret-color: #40c4ff !important;
-} */
+.signin-bg{
+    min-height: 30em;
+    background-image: url("~assets/img/signin-bg.jpg") !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
 </style>

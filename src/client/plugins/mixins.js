@@ -24,10 +24,10 @@ const mixins = {
         required: `${this.capitalize(displayName)} is required`,
         sameAsPassword: `${this.capitalize(displayName)} does not match.`,
         // regex: `${this.validationLabel} ${this.regexErrorMsg ? this.regexErrorMsg: ''}`,
-        maxLength: `${this.capitalize(displayName)} must have at most ${vuelidateObj.$params.maxLength ? vuelidateObj.$params.maxLength.max : ""} characters`,
-        minLength: `${this.capitalize(displayName)} must have at least ${vuelidateObj.$params.minLength ? vuelidateObj.$params.minLength.min : ""} characters`,
-        minValue: `${this.capitalize(displayName)} must be at least ${vuelidateObj.$params.minValue ? vuelidateObj.$params.minValue.min : ""}`,
-        maxValue: `${this.capitalize(displayName)} must be at most ${vuelidateObj.$params.maxValue ? vuelidateObj.$params.maxValue.max : ""}`,
+        maxLength: `${this.capitalize(displayName)} must have at most ${vuelidateObj[fieldName].$params.maxLength ? vuelidateObj[fieldName].$params.maxLength.max : ""} characters`,
+        minLength: `${this.capitalize(displayName)} must have at least ${vuelidateObj[fieldName].$params.minLength ? vuelidateObj[fieldName].$params.minLength.min : ""} characters`,
+        minValue: `${this.capitalize(displayName)} must be at least ${vuelidateObj[fieldName].$params.minValue ? vuelidateObj[fieldName].$params.minValue.min : ""}`,
+        maxValue: `${this.capitalize(displayName)} must be at most ${vuelidateObj[fieldName].$params.maxValue ? vuelidateObj[fieldName].$params.maxValue.max : ""}`,
         email: `${this.capitalize(displayName)} is invalid`
       }
 
@@ -35,7 +35,8 @@ const mixins = {
         if (!vuelidateObj[fieldName][key]) {
           if (typeof value !== "function") {
             errors.push(value)
-          } else {
+          }
+          else {
             errors.push(errMessages[key])
           }
         }
@@ -49,18 +50,22 @@ const mixins = {
       if (!file) return type
       if (file instanceof File) {
         fileType = file.type
-      } else if (file instanceof String) {
+      }
+      else if (file instanceof String) {
         fileType = file
-      } else {
+      }
+      else {
         console.warn("File Type cannot be determine, must be type of String or File.")
         return type
       }
 
       if (fileType.indexOf("image") !== -1) {
         type = "image"
-      } else if (fileType.indexOf("video") !== -1) {
+      }
+      else if (fileType.indexOf("video") !== -1) {
         type = "video"
-      } else {
+      }
+      else {
         type = "raw"
       }
       return type

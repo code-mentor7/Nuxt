@@ -10,7 +10,7 @@
         lg6
         xl6>
         <v-container align="center">
-          <h3 class="text-xs-center">{{ hey }}</h3>
+          <!-- <h3 class="text-xs-center">{{ hey }}</h3> -->
           <!-- <h3 class="text-xs-center">{{ dude }}</h3> -->
           <h1 class="font-enforce">Home</h1>
           <p>This page uses the default layout which is a Vue component with a sidebar</p>
@@ -27,9 +27,9 @@
 export default {
   async asyncData ({ app }) {
     console.log("asyncData index")
-    const hey = await app.$axios.$get("/api")
+    // const hey = await app.$axios.$get("/api")
     const apiData = await app.$axios.$get("/api/landing-page")
-    return { hey, apiData }
+    return { apiData }
   },
   auth: false,
   fetch () {
@@ -70,3 +70,6 @@ export default {
   }
 }
 </script>
+
+<style>
+</style>

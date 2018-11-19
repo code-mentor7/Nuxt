@@ -1,20 +1,13 @@
 import { Router } from "express"
 // import authenticate from '~/middleware/authenticate'
-import { index } from "./controllers"
+import controllers from "./controllers"
 
 const router = Router()
 
-router.get("/", index.get)
+router.param("id", controllers.findByParam)
 
-// router.get('/check', check.get)
-
-// router.post('/sign-in', signIn.post)
-// router.post('/sign-out', authenticate(), signOut.post)
-
-// router.route('/:username')
-//   .all(authenticate())
-//   .get(username.get)
-//   .post(username.post)
-//   .delete(username.delete)
+router.get("/", controllers.getAll)
+router.route("/:id")
+  .get(controllers.getOne)
 
 export default router

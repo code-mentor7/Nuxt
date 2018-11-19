@@ -66,7 +66,7 @@
         </v-list-tile>
         <v-list-tile
           v-if="!$auth.$state.loggedIn"
-          :to="{name:'SignUp'}"
+          :to="{name:`signup___${$i18n.locale}`}"
           exact
         >
           <v-list-tile-content>
@@ -236,7 +236,7 @@
         <v-btn
           v-if="!$auth.$state.loggedIn"
           :class="fontClass()"
-          :to="{name:'SignUp'}"
+          :to="{name:`signup___${$i18n.locale}`}"
           flat
           exact
           class="font-enforce font-weight-black"

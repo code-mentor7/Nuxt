@@ -17,6 +17,7 @@
     "sourceType": "module"
   },
   "rules": {
+    "brace-style": ["error", "stroustrup"],
     "max-len": [1, 120, 2, {"ignoreComments": true}],
     "quote-props": [1, "consistent-as-needed"],
     "no-cond-assign": [2, "except-parens"],

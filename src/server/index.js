@@ -47,7 +47,9 @@ mongoose.connect(process.env.DB_URL, { useNewUrlParser: true })
   })
 
 app.listen(PORT, HOST, err => {
-  if (err) { console.log(err) }
+  if (err) {
+    console.log(err)
+  }
   console.log(`Server listening on http://${HOST}:${PORT}`)
 })
 
