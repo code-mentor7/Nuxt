@@ -56,9 +56,9 @@ const mixins = {
         return type
       }
 
-      if (fileType.indexOf("image") != -1) {
+      if (fileType.indexOf("image") !== -1) {
         type = "image"
-      } else if (fileType.indexOf("video") != -1) {
+      } else if (fileType.indexOf("video") !== -1) {
         type = "video"
       } else {
         type = "raw"
@@ -87,7 +87,7 @@ const mixins = {
       return !isNaN(parseFloat(n)) && isFinite(n)
     },
     uploadFile (file, callback) {
-      const url = `https://api.cloudinary.com/v1_1/${Meteor.settings.public.cloud_name}/upload`
+      const url = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_NAME}/upload`
       const xhr = new XMLHttpRequest()
       const fd = new FormData()
       xhr.open("POST", url, true)
@@ -106,7 +106,7 @@ const mixins = {
       // });
 
       xhr.onreadystatechange = function (e) {
-        if (xhr.readyState == 4 && xhr.status == 200) {
+        if (xhr.readyState === 4 && xhr.status === 200) {
           // File uploaded successfully
           const response = JSON.parse(xhr.responseText)
           // https://res.cloudinary.com/cloudName/image/upload/v1483481128/public_id.jpg
@@ -123,7 +123,7 @@ const mixins = {
         }
       }
 
-      fd.append("upload_preset", Meteor.settings.public.upload_preset)
+      fd.append("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET)
       fd.append("tags", "browser_upload") // Optional - add tag for image admin in Cloudinary
       fd.append("file", file)
       xhr.send(fd)

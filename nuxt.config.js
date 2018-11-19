@@ -10,19 +10,48 @@ const HOST = process.env.HOST || "localhost"
 const BASE_URL = process.env.API_URL || `http://${HOST}:${PORT}/`
 
 module.exports = {
+  auth: {
+    redirect: {
+      login: "/signin",
+      logout: "/",
+      callback: "/signin",
+      home: "/"
+    },
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: "/api/auth/login", method: "post", propertyName: "token" },
+          logout: { url: "/api/auth/logout", method: "post" },
+          user: { url: "/api/auth/user", method: "get", propertyName: "user" }
+        }
+      }
+    }
+  },
   axios: {
+    proxy: true,
     baseURL: BASE_URL,
     retry: { retries: 3 }
   },
+  proxy: {
+    "/api": BASE_URL
+  },
   build: {
-    extractCSS: true
+    extractCSS: true,
+    extend (config) {
+      config.devtool = false
+    }
   },
   buildDir: "dist/client",
   cache: true,
   css: [
-    { src: "vuetify/dist/vuetify.min.css", lang: "css" }
-    // { src: '~/assets/style/app.styl', lang: 'styl' }
+    // { src: 'vuetify/dist/vuetify.min.css', lang: 'css' },
+    { src: "~/assets/style/app.styl", lang: "styl" }
   ],
+  env: {
+    // for client side env
+    CLOUDINARY_NAME: process.env.CLOUDINARY_NAME || "",
+    CLOUDINARY_UPLOAD_PRESET: process.env.CLOUDINARY_UPLOAD_PRESET || ""
+  },
   head: {
     title: "Nuxt FullStack Boiler",
     meta: [
@@ -34,42 +63,39 @@ module.exports = {
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Lato:300,400,500,700|Material+Icons" }
     ]
   },
+  // loading: '~/components/loading.vue',
+  loading: {
+    color: "#00FF00",
+    height: "5px",
+    // color: 'linear-gradient(45deg, rgba(255,0,0,1) 0%, rgba(255,255,0,1) 25%, rgba(5,193,255,1) 50%, rgba(255,255,0,1) 75%, rgba(255,0,0,1) 100%)',
+    continuous: true
+    // css: false
+  },
   manifest: {
     name: "vueniverse",
     description: "A Vueniverse project",
     theme_color: "#188269"
   },
   modules: [
+    "@nuxtjs/auth",
     "@nuxtjs/axios",
     "@nuxtjs/component-cache",
     ["nuxt-i18n", {
       // Options
+      seo: false,
       locales: [
-        { code: "en", iso: "en-US" },
-        { code: "zh", iso: "zh-CN" },
-        { code: "es", iso: "es-ES" }
+        { code: "en", iso: "en-US", name: "English" },
+        { code: "zh", iso: "zh-CN", name: "中文" }
       ],
-      // locales: [
-      //   {
-      //     code: "en",
-      //     iso: 'en-US',
-      //     name: "English"
-      //   },
-      //   {
-      //     code: "zh",
-      //     iso: "zh-CN",
-      //     name: "Chinese"
-      //   }
-      // ],
       defaultLocale: "en",
       routes: {
-        about: {
-          zh: "/a-propos",
-          en: "/about-us"
-        },
-        posts: {
-          zh: "/articles"
-        }
+        // about: {
+        //   zh: "/a-propos",
+        //   en: "/about-us"
+        // },
+        // posts: {
+        //   zh: "/articles"
+        // }
       },
       vueI18n: {
         fallbackLocale: "en",
@@ -83,6 +109,7 @@ module.exports = {
   plugins: [
     "~/plugins/filter.js",
     "~/plugins/mixins.js",
+    // { src: "~/plugins/vuelidate.js", ssr: true },
     "~/plugins/vuetify.js"
   ],
   render: {
@@ -95,8 +122,8 @@ module.exports = {
       }
     }
   },
-  // router: {
-  //   middleware: ['ssr-cookie']
-  // },
+  router: {
+    middleware: ["auth"]
+  },
   srcDir: path.resolve(__dirname, "src", "client")
 }

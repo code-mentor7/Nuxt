@@ -16,7 +16,7 @@
     >
       <v-list dense>
         <v-list-tile
-          :to="{name:'Home'}"
+          :to="{name: `index___${$i18n.locale}`}"
           avatar
           tile
           size="50px"
@@ -30,7 +30,8 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile
-          :to="{name:'AboutUs'}"
+          :to="{name:`about___${$i18n.locale}`}"
+          nuxt
           exact
         >
           <v-list-tile-content>
@@ -46,7 +47,7 @@
             color="orange"
           >
             <span
-              v-if="userId && customerData.cart.length > 0"
+              v-if="$auth.$state.loggedIn && customerData.cart.length > 0"
               slot="badge"
             >{{ customerData.cart.length }}</span>
             <v-list-tile-content>
@@ -55,8 +56,8 @@
           </v-badge>
         </v-list-tile>
         <v-list-tile
-          v-if="!userId"
-          :to="{name:'SignIn'}"
+          v-if="!$auth.$state.loggedIn"
+          :to="{name:`signin___${$i18n.locale}`}"
           exact
         >
           <v-list-tile-content>
@@ -64,7 +65,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile
-          v-if="!userId"
+          v-if="!$auth.$state.loggedIn"
           :to="{name:'SignUp'}"
           exact
         >
@@ -73,7 +74,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile
-          v-if="userId"
+          v-if="$auth.$state.loggedIn"
           :to="{name:'UserProfile'}"
           exact
         >
@@ -82,7 +83,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile
-          v-if="userId"
+          v-if="$auth.$state.loggedIn"
           @click="showChangePass = true"
         >
           <v-list-tile-content>
@@ -90,7 +91,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile
-          v-if="userId"
+          v-if="$auth.$state.loggedIn"
           @click="logout"
         >
           <v-list-tile-content>
@@ -167,39 +168,37 @@
             </v-list-tile>
           </v-list>
         </v-menu>
-        <v-menu offset-y>
+        <!-- <v-menu offset-y>
           <v-btn
             slot="activator"
             :class="fontClass()"
             flat
             class="font-enforce font-weight-black"
           >
-            <!-- <span class="flag-icon" :class="[`flag-icon-${lang.code}`]"></span> -->
-            {{ $i18n.locale }}
+            {{ lang.code }}
           </v-btn>
 
           <v-list>
             <v-list-tile
-              v-for="locale in $i18n.locales"
-
-              :key="locale.code"
-              @click="onChangeLang(item.value)"
+              v-for="(item, i) in filteredLangList"
+              :key="i"
+              :to="switchLocalePath(item.code)"
             >
               <v-list-tile-title>
-                <!-- <span class="flag-icon flag-icon-background" :class="[`flag-icon-${item.code}`]"></span> -->
-                {{ locale.name }}
+                {{ item.name }}
               </v-list-tile-title>
             </v-list-tile>
           </v-list>
-        </v-menu>
+        </v-menu> -->
         <!-- <nuxt-link
           v-for="locale in $i18n.locales"
           v-if="locale.code !== $i18n.locale"
           :key="locale.code"
           :to="switchLocalePath(locale.code)">{{ locale.name }}</nuxt-link> -->
         <v-btn
-          :to="{name:'AboutUs'}"
+          :to="{name:`about___${$i18n.locale}`}"
           :class="fontClass()"
+          nuxt
           flat
           exact
           class="font-enforce font-weight-black"
@@ -218,16 +217,16 @@
             color="orange"
           >
             <span
-              v-if="userId && customerData.cart.length > 0"
+              v-if="$auth.$state.loggedIn && customerData.cart.length > 0"
               slot="badge"
             >{{ customerData.cart.length }}</span>
             {{ $t('landingPage.cart') }}
           </v-badge>
         </v-btn>
         <v-btn
-          v-if="!userId"
+          v-if="!$auth.$state.loggedIn"
           :class="fontClass()"
-          :to="{name:'SignIn'}"
+          :to="{name:`signin___${$i18n.locale}`}"
           flat
           exact
           class="font-enforce font-weight-black"
@@ -235,7 +234,7 @@
           {{ $t('landingPage.signIn') }}
         </v-btn>
         <v-btn
-          v-if="!userId"
+          v-if="!$auth.$state.loggedIn"
           :class="fontClass()"
           :to="{name:'SignUp'}"
           flat
@@ -245,7 +244,7 @@
           {{ $t('landingPage.signUp') }}
         </v-btn>
         <v-menu
-          v-if="userId"
+          v-if="$auth.$state.loggedIn"
           v-model="userMenu"
           :nudge-bottom="15"
           :value="false"
@@ -329,6 +328,9 @@
 import ChangePasswordDialog from "~/components/Dialog/ChangePasswordDialog.vue"
 
 export default {
+  fetch () {
+    console.log("Fetch")
+  },
   components: {
     ChangePasswordDialog
   },
@@ -341,14 +343,13 @@ export default {
       lang: { value: "en", code: "English" },
       langList: [
         {
-          id: 0, value: "en", name: "English", code: "us"
+          id: 0, value: "en", name: "English", code: "en"
         },
         {
-          id: 1, value: "zh", name: "中文", code: "cn"
+          id: 1, value: "zh", name: "中文", code: "zh"
         }
       ],
       showChangePass: false,
-      userId: "asdasd",
       customerData: {
         cart: ""
       }
@@ -370,7 +371,9 @@ export default {
     }
   },
   mounted () {
+    console.log("user", this.$auth.user)
     console.log("this.$i18n", this.$i18n.locales, this.$i18n.locale, this.$i18n)
+    console.log("switchLocalePath(locale.code)", this.switchLocalePath("zh"), this.$router.options.routes, process.env.CLOUDINARY_UPLOAD_PRESET)
     if (this.customerData) {
       if (typeof this.customerData.localeLang !== "undefined") {
         this.setLang(this.customerData.localeLang)
@@ -413,14 +416,25 @@ export default {
     isTransparentColor () {
       let color = ""
       // need give more offset to not have color fade, instant color change
-      // if (this.checkPathForTransparent() && this.offsetTop < 300) {
-      //   color = "transparent";
-      // }
+      if (this.checkPathForTransparent() && this.offsetTop < 300) {
+        color = "transparent"
+      }
 
       return color
     },
     logout () {
       this.loggingOut = true
+      this.$auth.logout()
+        .then(() => {
+          this.userMenu = false
+          this.loggingOut = false
+          this.$store.dispatch("setupSnackbar", {
+            show: true,
+            text: "Goodbye, have a nice day!",
+            type: "success"
+          })
+        })
+        .catch()
       // this.setFullPageLoading(true);
       // Meteor.logout((err) => {
       //   this.setFullPageLoading(false);
@@ -457,7 +471,7 @@ export default {
       this.$i18n.locale = this.lang.value
     },
     toHome () {
-      this.$router.push({ name: "Home" })
+      this.$router.push({ name: `index___${this.$i18n.locale}` })
     },
     toolbarClass () {
       let toolbarClass = "elevation-0"

@@ -13,7 +13,7 @@ const filters = {
   cloudinaryImageUrl (value) {
     let url = ""
     if (value) {
-      url = `https://res.cloudinary.com/${Meteor.settings.public.cloud_name}/image/upload/${value}`
+      url = `https://res.cloudinary.com/${process.env.CLOUDINARY_NAME}/image/upload/${value}`
     }
     return url
   },
@@ -21,14 +21,14 @@ const filters = {
     //  http://res.cloudinary.com/travel96/image/upload/c_fill,g_faces,h_250,w_250/xqg4aafdh1uewtwt4dzz
     let url = ""
     if (value) {
-      url = `https://res.cloudinary.com/${Meteor.settings.public.cloud_name}/image/upload/c_fill,g_faces,h_250,w_250/${value}`
+      url = `https://res.cloudinary.com/${process.env.CLOUDINARY_NAME}/image/upload/c_fill,g_faces,h_250,w_250/${value}`
     }
     return url
   },
   cloudinaryRawUrl (value) {
     let url = ""
     if (value) {
-      url = `https://res.cloudinary.com/${Meteor.settings.public.cloud_name}/raw/upload/${value}`
+      url = `https://res.cloudinary.com/${process.env.CLOUDINARY_NAME}/raw/upload/${value}`
     }
     return url
   },

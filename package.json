@@ -34,6 +34,7 @@
     "stylus-loader": "^3.0.2"
   },
   "dependencies": {
+    "@nuxtjs/auth": "^4.5.3",
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/component-cache": "^1.1.3",
     "bcryptjs": "^2.4.3",

@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire">
+  <v-app>
     <top-nav />
     <v-content
       :class="contentClass()"
@@ -24,6 +24,9 @@ export default {
     Snackbar,
     TopNav
   },
+  fetch () {
+    console.log("Fetch")
+  },
   methods: {
     contentClass () {
       let contentClass = ""
@@ -45,3 +48,10 @@ export default {
   }
 }
 </script>
+
+<style>
+/* .primary--text {
+  color: #40c4ff !important;
+  caret-color: #40c4ff !important;
+} */
+</style>
