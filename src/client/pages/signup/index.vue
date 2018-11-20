@@ -72,7 +72,7 @@
                 name="password"
                 label="Password"
                 counter
-                @input="$v.password.$touch()"
+                @input="$v.password.$touch(); $v.confirm_password.$touch()"
                 @click:append="showPassword = !showPassword"
               />
               <v-text-field
@@ -84,7 +84,7 @@
                 name="confirm_password"
                 label="Confirm Password"
                 counter
-                @input="$v.confirm_password.$touch()"
+                @input="$v.confirm_password.$touch(); $v.password.$touch()"
                 @click:append="showConfirmPassword = !showConfirmPassword"
               />
               <v-checkbox
@@ -190,14 +190,10 @@ export default {
     this.debouncedSearch = debounce(this.checkEmailValidity, 700)
   },
   methods: {
-    // ...mapActions("layout", [
-    //   "setupSnackbar",
-    //   "setFullPageLoading",
-    // ]),
     signup () {
+      // TODO: email custom validation for unique check
       this.$v.$touch()
       if (!this.$v.$invalid) {
-        // this.setFullPageLoading(true);
         this.submitted = true
         const attr = {
           name: this.name,
@@ -206,6 +202,7 @@ export default {
           contact_number: this.mobile_number,
           wechat_id: this.wechat_id
         }
+        this.removeEmptyObjectVariable(attr) // Remove empty value prior to create
         let msg = "Account created. We have sent you an email for verification."
         let type = "success"
         this.$axios.$post("/api/auth/signup", attr)
@@ -217,9 +214,9 @@ export default {
               text: msg,
               type
             })
-            console.log(response)
           })
           .catch(() => {
+            this.submitted = false
             this.$v.$reset()
             type = "error"
             msg = "We are unable to sign you up at this moment."
@@ -229,26 +226,6 @@ export default {
               type
             })
           })
-        // Meteor.call("customerSignup", attr, (err, res) => {
-        //   // this.setFullPageLoading(false);
-        //   this.submitted = false;
-        //   let msg = "Account created. We have sent you an email for verification.";
-        //   let type = "success";
-        //   if (err) {
-        //     type = "error";
-        //     msg = "We are unable to sign you up at this moment.";
-        //   }
-        //   // else {
-        //   //     this.messageType = "success";
-        //   //     this.message =
-        //   //     "Account created. We have sent you an email for verification.";
-        //   // }
-        //   this.setupSnackbar({
-        //     show: true,
-        //     text: msg,
-        //     type,
-        //   });
-        // });
       }
     },
     emailInput () {

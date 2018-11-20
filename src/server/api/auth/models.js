@@ -12,8 +12,8 @@ const customerSchema = new mongoose.Schema({
   },
   "email": {
     type: String,
-    unique: true,
-    require: true
+    required: true,
+    unique: true
   },
   "secondary_email": {
     type: String
@@ -30,37 +30,30 @@ const customerSchema = new mongoose.Schema({
   },
   "wishlist.$": {
     type: Object,
-
     blackbox: true
   },
   "cart": {
     type: Array,
     default: []
-
   },
   "cart.$": {
     type: Object,
-
     blackbox: true
   },
   "billing_address": {
     type: Array,
     default: []
-
   },
   "billing_address.$": {
     type: Object,
-
     blackbox: true
   },
   "shipping_address": {
     type: Array,
     default: []
-
   },
   "shipping_address.$": {
     type: Object,
-
     blackbox: true
   },
   "localeLang": {
@@ -69,7 +62,6 @@ const customerSchema = new mongoose.Schema({
   },
   "wechat_id": {
     type: String,
-
     default: ""
   },
   "password": {
@@ -77,19 +69,25 @@ const customerSchema = new mongoose.Schema({
     require: true,
     minlength: 5
   },
-  "email_verified": {
+  "account_verified": {
     type: Boolean,
-    optional: true,
     default: false
   },
   "verification_token": {
-    type: String,
-    optional: true
+    type: String
+  },
+  "verified_at": {
+    type: Date
+  },
+  "verified_via": {
+    type: String
   }
 }, {
-  timestamps: true,
-  createdAt: "created_at",
-  updatedAt: "updated_at"
+  strict: true,
+  timestamps: {
+    createdAt: "created_at",
+    updatedAt: "updated_at"
+  }
 })
 
 customerSchema.pre("save", async function (next) {

@@ -138,7 +138,6 @@ export default {
       this.isErr = false
       this.$v.$touch()
       if (!this.$v.$invalid) {
-        // this.setFullPageLoading(true);
         this.submitted = true
 
         this.$auth.loginWith("local", {
@@ -156,37 +155,18 @@ export default {
               type: "success"
             })
           })
-          .catch(() => {
+          .catch((err) => {
             this.submitted = false
+            let text = "Invalid email or password."
+            if (err.response.status === 403) {
+              text = "Account is not verified. Please check your email for verification."
+            }
             this.$store.dispatch("setupSnackbar", {
               show: true,
-              text: "Invalid email or password.",
+              text,
               type: "error"
             })
           })
-        // Meteor.loginWithPassword(this.email, this.password, (err, res) => {
-        //   this.submitted = false;
-        //   this.setFullPageLoading(false);
-        //   let msg = "Welcome Back !";
-        //   let type = "success";
-        //   if (err) {
-        //     type = "error";
-        //     msg = "Invalid email or password.";
-        //     if (err.error === 403 && err.reason === "email-not-verified") {
-        //       type = "error";
-        //       msg = err.details;
-        //     }
-        //     // this.isErr = true;
-        //     this.message = "Invalid email or password.";
-        //   } else {
-        //     this.$router.push({ name: "Home" });
-        //   }
-        //   this.setupSnackbar({
-        //     show: true,
-        //     text: msg,
-        //     type,
-        //   });
-        // });
       }
     }
   },

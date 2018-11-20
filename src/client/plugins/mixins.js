@@ -91,6 +91,13 @@ const mixins = {
     isNumeric (n) {
       return !isNaN(parseFloat(n)) && isFinite(n)
     },
+    removeEmptyObjectVariable (obj) {
+      Object.keys(obj).forEach(key => {
+        if (!obj[key]) {
+          delete obj[key]
+        }
+      })
+    },
     uploadFile (file, callback) {
       const url = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_NAME}/upload`
       const xhr = new XMLHttpRequest()

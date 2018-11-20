@@ -1,5 +1,5 @@
 import { Router } from "express"
-import { login, user, logout, check, signup } from "./controllers"
+import { login, user, logout, check, signup, verify } from "./controllers"
 
 const jwt = require("express-jwt")
 
@@ -13,6 +13,7 @@ router.post("/signup", signup.post)
 router.get("/user", jwt({ secret: process.env.SECRET }), user.get)
 
 router.post("/user/check", check.post)
+router.post("/verify", verify.post)
 
 // router.get('/check', check.get)
 

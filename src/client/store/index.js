@@ -5,10 +5,11 @@ export const state = () => {
     isDarkTheme: true,
     isFullPageLoading: false,
     isSnackbar: false,
-    localeLang: { value: "en", name: "English", code: "us" },
+    localeLang: { value: "en", name: "English", code: "en" },
     showSideBar: false,
     snackBarText: "",
-    snackBarType: "info"
+    snackBarType: "info",
+    verificationMessage: ""
   }
 }
 
@@ -34,10 +35,12 @@ export const mutations = {
   SET_SNACKBAR_TYPE (state, value) {
     state.snackBarType = value
   },
+  SET_VERIFICATION_MESSAGE (state, value) {
+    state.verificationMessage = value
+  },
   SHOW_SIDE_BAR (state, value) {
     state.showSideBar = value
   }
-
 }
 export const actions = {
   async nuxtServerInit ({ commit }, { app }) {
@@ -61,6 +64,9 @@ export const actions = {
   },
   setIsDarkTheme ({ commit }, value) {
     commit("SET_IS_DARK_THEME", value)
+  },
+  setVerificationMessage ({ commit }, value) {
+    commit("SET_VERIFICATION_MESSAGE", value)
   },
   setupSnackbar ({ commit }, { show, text, type }) {
     commit("SET_SNACKBAR_TEXT", text)

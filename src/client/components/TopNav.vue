@@ -47,7 +47,7 @@
             color="orange"
           >
             <span
-              v-if="$auth.$state.loggedIn && customerData.cart.length > 0"
+              v-if="isLoggedIn && customerData.cart.length > 0"
               slot="badge"
             >{{ customerData.cart.length }}</span>
             <v-list-tile-content>
@@ -56,7 +56,7 @@
           </v-badge>
         </v-list-tile>
         <v-list-tile
-          v-if="!$auth.$state.loggedIn"
+          v-if="!isLoggedIn"
           :to="{name:`signin___${$i18n.locale}`}"
           exact
         >
@@ -65,7 +65,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile
-          v-if="!$auth.$state.loggedIn"
+          v-if="!isLoggedIn"
           :to="{name:`signup___${$i18n.locale}`}"
           exact
         >
@@ -74,7 +74,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile
-          v-if="$auth.$state.loggedIn"
+          v-if="isLoggedIn"
           :to="{name:'UserProfile'}"
           exact
         >
@@ -83,7 +83,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile
-          v-if="$auth.$state.loggedIn"
+          v-if="isLoggedIn"
           @click="showChangePass = true"
         >
           <v-list-tile-content>
@@ -91,7 +91,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile
-          v-if="$auth.$state.loggedIn"
+          v-if="isLoggedIn"
           @click="logout"
         >
           <v-list-tile-content>
@@ -217,14 +217,14 @@
             color="orange"
           >
             <span
-              v-if="$auth.$state.loggedIn && customerData.cart.length > 0"
+              v-if="isLoggedIn && customerData.cart.length > 0"
               slot="badge"
             >{{ customerData.cart.length }}</span>
             {{ $t('landingPage.cart') }}
           </v-badge>
         </v-btn>
         <v-btn
-          v-if="!$auth.$state.loggedIn"
+          v-if="!isLoggedIn"
           :class="fontClass()"
           :to="{name:`signin___${$i18n.locale}`}"
           flat
@@ -234,7 +234,7 @@
           {{ $t('landingPage.signIn') }}
         </v-btn>
         <v-btn
-          v-if="!$auth.$state.loggedIn"
+          v-if="!isLoggedIn"
           :class="fontClass()"
           :to="{name:`signup___${$i18n.locale}`}"
           flat
@@ -244,7 +244,7 @@
           {{ $t('landingPage.signUp') }}
         </v-btn>
         <v-menu
-          v-if="$auth.$state.loggedIn"
+          v-if="isLoggedIn"
           v-model="userMenu"
           :nudge-bottom="15"
           :value="false"
@@ -325,6 +325,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex"
 import ChangePasswordDialog from "~/components/Dialog/ChangePasswordDialog.vue"
 
 export default {
@@ -356,6 +357,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      isLoggedIn: state => state.auth.loggedIn
+    }),
     // ...mapGetters("layout", [
     //   "isFullPageLoading",
     //   "localeLang",
