@@ -30,13 +30,13 @@ export default {
       }
     }
     catch (err) {
-      console.log("err", err.response.message)
+      console.log("err", err.response.status, err.response.message, err.response.data)
       let text = "Verification failed. Request for resend verification email."
       if (err.response.status === 403) {
         text = "Your account already verified."
       }
       if (err.response.status === 401) {
-        text = "Link expired. Request for resend verification email."
+        text = "Link invalid/expired. Request for resend verification email."
       }
       app.store.dispatch("setupSnackbar", {
         show: true,

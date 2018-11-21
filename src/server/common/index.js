@@ -34,7 +34,8 @@ export const getSchemaKeys = (model, keysToOmit = ["_id", "id", "created_at", "u
 
 export const sendEmail = async (mailTo, mailSubject, mailBody, mailFrom = "96travel <support@96travel.com>") => {
   if (!mailTo || !mailSubject || !mailBody || !process.env.MAILER_URL) {
-    return console.warn("Mail to, Mail subject Mail Body/HTML and Mailer URL (config) is required.")
+    console.warn("Mail to, Mail subject Mail Body/HTML and Mailer URL (config) is required.")
+    return Promise.reject()
   }
   try {
     const transporter = nodemailer.createTransport(process.env.MAILER_URL)

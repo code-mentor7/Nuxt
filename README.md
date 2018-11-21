@@ -6,3 +6,5 @@ Node cloudinary
 Error handling
 Put mixins in Vue plugins
 API whitelist
+Handle mongo connection refused
+vuetify loader

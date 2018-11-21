@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs"
 import { ServerError } from "express-server-error"
 
 // TODO: Customer Roles
-// TODO: Email for verify and forget pass
 
 const customerSchema = new mongoose.Schema({
   "name": {

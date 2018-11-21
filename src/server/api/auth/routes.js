@@ -1,4 +1,5 @@
 import { Router } from "express"
+import verifyToken from "~/middleware/verify-token"
 import { login, user, logout, check, signup, verify, resendVE, forgotPass, resetPass } from "./controllers"
 
 const jwt = require("express-jwt")
@@ -16,12 +17,8 @@ router.post("/reset-password", resetPass.post)
 router.get("/user", jwt({ secret: process.env.SECRET }), user.get)
 
 router.post("/user/check", check.post)
-router.post("/verify", verify.post)
-
-// router.get('/check', check.get)
-
-// router.post('/sign-in', signIn.post)
-// router.post('/sign-out', authenticate(), signOut.post)
+router.post("/verify", verifyToken, verify.post)
+router.post("/verify-token", verifyToken)
 
 // router.route('/:username')
 //   .all(authenticate())

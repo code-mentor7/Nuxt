@@ -31,7 +31,7 @@
             </v-card-text>
             <v-card-actions>
               <v-btn
-                :to="{name:'SignIn'}"
+                :to="{name:`signin___${$i18n.locale}`}"
                 class="primary--text"
                 flat
                 exact>SIGN IN</v-btn>

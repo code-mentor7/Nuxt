@@ -3,9 +3,8 @@ import jwt from "jsonwebtoken"
 import Customer from "./models"
 import randString from "~/util/randString"
 import { ServerError } from "express-server-error"
-import { pick as _pick } from "lodash"
+import { pick as _pick, omit as _omit } from "lodash"
 import { generateEmailHTMLButtonTemplate, generateToken, getSchemaKeys, sendEmail } from "../../common"
-import moment from "moment"
 
 export const login = {
   async post (req, res) {
@@ -19,11 +18,11 @@ export const login = {
         throw new ServerError("Authentication failed. Incorrect email or password", { status: 401, log: false })
       }
       else {
-        const userObj = user.toObject()
+        const userObj = _omit(user.toObject(), ["password", "verification_token", "reset_password_token"])
         if (userObj.account_verified !== true) {
           throw new ServerError("Account not verified.", { status: 403, log: false })
         }
-        let token = jwt.sign(userObj, process.env.SECRET, { expiresIn: "30 days", jwtid: randString() })
+        const token = jwt.sign(userObj, process.env.SECRET, { expiresIn: "30 days", jwtid: randString() })
         res.json({ token })
       }
     }
@@ -66,11 +65,11 @@ export const check = {
 export const resendVE = {
   async post (req, res) {
     try {
-      const allowedData = _pick(req.body, ["email"])
-      if (!allowedData.email) {
+      const { email } = req.body
+      if (!email) {
         throw new ServerError("Email is required.", { status: 400 })
       }
-      let cust = await Customer.findOne({ email: allowedData.email })
+      let cust = await Customer.findOne({ email })
       if (!cust) throw new ServerError("Email not found.", { status: 400 })
 
       if (cust.account_verified === true) {
@@ -79,7 +78,8 @@ export const resendVE = {
 
       const signature = {
         email: cust.email,
-        contact_number: cust.contact_number
+        contact_number: cust.contact_number,
+        type: "verify"
       }
 
       cust.verification_token = generateToken(signature)
@@ -102,9 +102,20 @@ export const resendVE = {
 }
 
 export const resetPass = {
-  // TODO: reset successfull should refresh attempt count
   async post (req, res) {
     try {
+      if (req.body.password === undefined) {
+        throw new ServerError("Password required.", { status: 400 })
+      }
+      let decodedData = jwt.verify(req.body.i, process.env.SECRET)
+      let cust = await Customer.findOne({ email: decodedData.email })
+
+      if (!cust) throw new ServerError("Email not found.", { status: 400 })
+      cust.reset_password_token = ""
+      cust.reset_password_attempt = 0
+      cust.reset_password_at = new Date()
+      cust.password = req.body.password
+      cust.save()
       res.json({ status: "OK" })
     }
     catch (err) {
@@ -116,23 +127,28 @@ export const resetPass = {
 export const forgotPass = {
   async post (req, res) {
     try {
-      const allowedData = _pick(req.body, ["email"])
-      if (!allowedData.email) {
+      const { email } = req.body
+      if (!email) {
         throw new ServerError("Email is required.", { status: 400 })
       }
-      let cust = await Customer.findOne({ email: allowedData.email })
+      let cust = await Customer.findOne({ email })
       if (!cust) throw new ServerError("Email not found.", { status: 400 })
 
       if (cust.account_verified === false) {
         throw new ServerError("Please verify your account.", { status: 403 })
       }
       if (cust.reset_password_attempt > 2) {
+        if (cust.reset_password_token !== "") {
+          cust.reset_password_token = ""
+          await cust.save()
+        }
         throw new ServerError("short and stout", { status: 418 })
       }
 
       const signature = {
         email: cust.email,
-        contact_number: cust.contact_number
+        contact_number: cust.contact_number,
+        type: "reset"
       }
 
       cust.reset_password_token = generateToken(signature)
@@ -162,7 +178,8 @@ export const signup = {
       const allowedSchema = _pick(req.body, getSchemaKeys(Customer))
       const signature = {
         email: allowedSchema.email,
-        contact_number: allowedSchema.contact_number
+        contact_number: allowedSchema.contact_number,
+        type: "verify"
       }
 
       allowedSchema.verification_token = generateToken(signature)
@@ -170,7 +187,9 @@ export const signup = {
       // If your 'users' collection doesn't have a unique index on userName,
       // you need to wait for the index to build before you start relying on it.
       // https://github.com/Automattic/mongoose/issues/5050
-      await Customer.init()
+      // console.log("###############before init")
+      // await Customer.init()
+      // FIXME: right now meteor relying on user id unique, need to change index to email
       // let newCustomer = new Customer(allowedSchema)
       // await newCustomer.save()
       await Customer.create(allowedSchema)
@@ -185,6 +204,7 @@ export const signup = {
       res.json({ status: "OK" })
     }
     catch (error) {
+      console.log("#################ERROR", error.message)
       res.handleServerError(error)
     }
   }
@@ -193,21 +213,11 @@ export const signup = {
 export const verify = {
   async post (req, res) {
     try {
-      let decodedData = jwt.verify(req.body.i, process.env.SECRET)
-      if (decodedData.email === undefined) {
+      let cust = req.userObj
+
+      if (cust === undefined) {
         throw new ServerError("Email not found.", { status: 400 })
       }
-
-      let unixNow = moment().unix()
-      if (decodedData.exp) {
-        if (unixNow > decodedData.exp) {
-          throw new ServerError("Token Expired.", { status: 401 })
-        }
-      }
-
-      let cust = await Customer.findOne({ email: decodedData.email })
-
-      if (!cust) throw new ServerError("Email not found.", { status: 400 })
 
       if (cust.account_verified === true) {
         throw new ServerError("Account already verified.", { status: 403 })
@@ -217,6 +227,7 @@ export const verify = {
       cust.verified_via = "email"
       cust.verification_token = ""
       await cust.save()
+      delete req.userObj
       res.json({ status: "OK" })
     }
     catch (error) {

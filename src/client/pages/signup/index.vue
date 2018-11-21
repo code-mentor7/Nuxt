@@ -193,7 +193,7 @@ export default {
     signup () {
       // TODO: email custom validation for unique check
       this.$v.$touch()
-      if (!this.$v.$invalid) {
+      if (!this.$v.$invalid && this.emailVerified === true) {
         this.submitted = true
         const attr = {
           name: this.name,

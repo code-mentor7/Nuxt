@@ -10,7 +10,9 @@
         xs12
         sm8
         md4>
-        <v-card class="elevation-10">
+        <v-card
+          v-if="resetPasswordStatus"
+          class="elevation-10">
           <v-toolbar
             dark
             class="blue-gradient">
@@ -30,7 +32,7 @@
                 name="password"
                 label="Password"
                 counter
-                @input="$v.password.$touch()"
+                @input="$v.password.$touch(); $v.confirm_password.$touch()"
                 @click:append="showPassword = !showPassword"
               />
               <v-text-field
@@ -42,13 +44,13 @@
                 name="confirm_password"
                 label="Confirm Password"
                 counter
-                @input="$v.confirm_password.$touch()"
+                @input="$v.confirm_password.$touch(); $v.password.$touch()"
                 @click:append="showConfirmPassword = !showConfirmPassword"
               />
             </v-card-text>
             <v-card-actions>
               <v-btn
-                :to="{name:'SignIn'}"
+                :to="{name:`signin___${$i18n.locale}`}"
                 class="primary--text"
                 flat
                 exact>SIGN IN</v-btn>
@@ -72,10 +74,9 @@ import {
   sameAs
 } from "vuelidate/lib/validators"
 import { validationMixin } from "vuelidate"
-// import { Accounts } from "meteor/accounts-base"
-// import { mapGetters, mapActions } from "vuex"
-// TODO: token expire check when load page only
-// TODO: Reset attempt lock
+import { mapState } from "vuex"
+// TODO: test Reset attempt lock
+// TODO: View if token invalid
 export default {
   auth: false,
   mixins: [validationMixin],
@@ -85,33 +86,20 @@ export default {
       if (route.query.i === undefined) {
         app.store.dispatch("setupSnackbar", {
           show: true,
-          text: "Reset failed. Request for a new forgot password email.",
+          text: "Link invalid/expired. Request for a new forgot password email.",
           type: "error"
         })
         app.store.dispatch("setResetPasswordStatus", false)
       }
       else {
-        await app.$axios.$post("/api/auth/reset-password", { i: route.query.i })
-        app.store.dispatch("setupSnackbar", {
-          show: true,
-          text: "Password reset successful.",
-          type: "success"
-        })
+        await app.$axios.$post("/api/auth/verify-token", { i: route.query.i })
         app.store.dispatch("setResetPasswordStatus", true)
       }
     }
     catch (err) {
-      console.log("err", err.response.message)
-      let text = "Reset failed. Request for a new forgot password email."
-      if (err.response.status === 403) {
-        // text = "Your account already verified."
-      }
-      if (err.response.status === 401) {
-        text = "Link expired. Request for a new forgot password email."
-      }
       app.store.dispatch("setupSnackbar", {
         show: true,
-        text,
+        text: "Link invalid/expired. Request for a new forgot password email.",
         type: "error"
       })
       app.store.dispatch("setResetPasswordStatus", false)
@@ -137,36 +125,41 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState({
+      resetPasswordStatus: state => state.resetPasswordStatus
+    })
+  },
+  mounted () {
+    if (this.resetPasswordStatus === false) {
+      setTimeout(() => {
+        this.$nuxt.$router.push({ name: `forgot-password___${this.$i18n.locale}` })
+      }, 5000)
+    }
+  },
   methods: {
-    ...mapActions("layout", [
-      "setupSnackbar",
-      "setLoading"
-    ]),
     resetPass () {
       this.isAlert = false
       this.$v.$touch()
       if (!this.$v.$invalid) {
-        this.setLoading(true)
         this.submitted = true
-        Accounts.resetPassword(this.$route.params.token, this.password, (err, res) => {
-          this.setLoading(false)
-          this.isAlert = true
-          this.submitted = false
-          let msg = "Successfully reset your password"
-          let type = "success"
-          if (err) {
-            if (err.reason != "Login forbidden") {
-              type = "error"
-              msg = "Reset password failed. Please try again"
-            }
-          }
-          this.$router.push({ name: "Home" })
-          this.setupSnackbar({
-            show: true,
-            text: msg,
-            type: type
+        this.$axios.$post("/api/auth/reset-password", { i: this.$route.query.i, password: this.password })
+          .then(() => {
+            this.submitted = false
+            this.$store.dispatch("setupSnackbar", {
+              show: true,
+              text: "Password reset successful.",
+              type: "success"
+            })
           })
-        })
+          .catch(() => {
+            this.submitted = false
+            this.$store.dispatch("setupSnackbar", {
+              show: true,
+              text: "Reset failed. Request for a new forgot password email.",
+              type: "error"
+            })
+          })
       }
     }
   },

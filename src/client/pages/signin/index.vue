@@ -54,7 +54,7 @@
                 text-xs-center
               >
                 <v-btn
-                  :to="{name:'ForgotPassword'}"
+                  :to="{name:`forgot-password___${$i18n.locale}`}"
                   class="primary--text"
                   flat
                   exact
