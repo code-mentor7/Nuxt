@@ -63,6 +63,99 @@ export const check = {
   }
 }
 
+export const resendVE = {
+  async post (req, res) {
+    try {
+      const allowedData = _pick(req.body, ["email"])
+      if (!allowedData.email) {
+        throw new ServerError("Email is required.", { status: 400 })
+      }
+      let cust = await Customer.findOne({ email: allowedData.email })
+      if (!cust) throw new ServerError("Email not found.", { status: 400 })
+
+      if (cust.account_verified === true) {
+        throw new ServerError("Account already verified.", { status: 403 })
+      }
+
+      const signature = {
+        email: cust.email,
+        contact_number: cust.contact_number
+      }
+
+      cust.verification_token = generateToken(signature)
+
+      await cust.save()
+      const verificationLink = `${req.protocol}://${req.get("host")}/verify?i=${cust.verification_token}`
+      const emailHTML = generateEmailHTMLButtonTemplate(
+        verificationLink,
+        "Email Verification",
+        "Verify your email to complete your signup",
+        "Click Me"
+      )
+      await sendEmail(cust.email, "[96travel] Verify Your Signup", emailHTML)
+      res.json({ status: "OK" })
+    }
+    catch (err) {
+      res.handleServerError(err)
+    }
+  }
+}
+
+export const resetPass = {
+  // TODO: reset successfull should refresh attempt count
+  async post (req, res) {
+    try {
+      res.json({ status: "OK" })
+    }
+    catch (err) {
+      res.handleServerError(err)
+    }
+  }
+}
+
+export const forgotPass = {
+  async post (req, res) {
+    try {
+      const allowedData = _pick(req.body, ["email"])
+      if (!allowedData.email) {
+        throw new ServerError("Email is required.", { status: 400 })
+      }
+      let cust = await Customer.findOne({ email: allowedData.email })
+      if (!cust) throw new ServerError("Email not found.", { status: 400 })
+
+      if (cust.account_verified === false) {
+        throw new ServerError("Please verify your account.", { status: 403 })
+      }
+      if (cust.reset_password_attempt > 2) {
+        throw new ServerError("short and stout", { status: 418 })
+      }
+
+      const signature = {
+        email: cust.email,
+        contact_number: cust.contact_number
+      }
+
+      cust.reset_password_token = generateToken(signature)
+      cust.reset_password_attempt += 1
+      cust.reset_password_attempt_at = new Date()
+
+      await cust.save()
+      const resetLink = `${req.protocol}://${req.get("host")}/reset-password?i=${cust.reset_password_token}`
+      const emailHTML = generateEmailHTMLButtonTemplate(
+        resetLink,
+        "Reset Password",
+        "Click the button to reset your password",
+        "Click Me"
+      )
+      await sendEmail(cust.email, "[96travel] Reset Password", emailHTML)
+      res.json({ status: "OK" })
+    }
+    catch (err) {
+      res.handleServerError(err)
+    }
+  }
+}
+
 export const signup = {
   async post (req, res) {
     try {
@@ -123,7 +216,7 @@ export const verify = {
       cust.account_verified = true
       cust.verified_via = "email"
       cust.verification_token = ""
-      cust.save()
+      await cust.save()
       res.json({ status: "OK" })
     }
     catch (error) {

@@ -73,6 +73,19 @@ const customerSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  "reset_password_attempt": {
+    type: Number,
+    default: 0
+  },
+  "reset_password_attempt_at": {
+    type: Date
+  },
+  "reset_password_at": {
+    type: Date
+  },
+  "reset_password_token": {
+    type: String
+  },
   "verification_token": {
     type: String
   },

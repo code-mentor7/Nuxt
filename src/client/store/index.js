@@ -6,6 +6,7 @@ export const state = () => {
     isFullPageLoading: false,
     isSnackbar: false,
     localeLang: { value: "en", name: "English", code: "en" },
+    resetPasswordStatus: false,
     showSideBar: false,
     snackBarText: "",
     snackBarType: "info",
@@ -25,6 +26,9 @@ export const mutations = {
   },
   SET_LOCALE_LANG (state, value) {
     state.localeLang = value
+  },
+  SET_RESET_PASSWORD_STATUS (state, value) {
+    state.resetPasswordStatus = value
   },
   SET_SNACKBAR (state, value) {
     state.isSnackbar = value
@@ -58,6 +62,9 @@ export const actions = {
   },
   setLocaleLang ({ commit }, value) {
     commit("SET_LOCALE_LANG", value)
+  },
+  setResetPasswordStatus ({ commit }, value) {
+    commit("SET_RESET_PASSWORD_STATUS", value)
   },
   setSnackbar ({ commit }, value) {
     commit("SET_SNACKBAR", value)

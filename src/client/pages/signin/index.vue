@@ -66,7 +66,7 @@
                 text-xs-center
               >
                 <v-btn
-                  :to="{name: 'ResendVerificationEmail'}"
+                  :to="{name:`resend-verification-email___${$i18n.locale}`}"
                   class="primary--text"
                   flat
                   exact

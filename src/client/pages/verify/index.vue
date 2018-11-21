@@ -4,6 +4,7 @@
 
 <script>
 import { mapState } from "vuex"
+// TODO: View for user
 
 export default {
   auth: false,

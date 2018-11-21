@@ -4,9 +4,10 @@
     "javascriptreact",
     {
       "language": "vue",
-      "autoFix": false
+      "autoFix": true
     }
   ],
   "eslint.provideLintTask": true,
   "eslint.alwaysShowStatus": true,
+  "eslint.autoFixOnSave": true,
 }
