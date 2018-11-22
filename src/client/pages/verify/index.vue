@@ -1,10 +1,30 @@
 <template>
-  <h1>asdasd {{ verificationMessage }}</h1>
+  <v-container
+    fluid
+    fill-height
+    class="signin-bg">
+    <v-layout
+      align-center
+      justify-center>
+      <v-flex
+        xs12
+        sm8
+        md4>
+        <v-card
+          class="elevation-10">
+          <v-card-text>
+            <div class="display-2"> Verification {{ verificationMessage ? "success" : "failed" }}.
+            You will be redirected to Sign In in {{ timerCountdown }} seconds.
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
 import { mapState } from "vuex"
-// TODO: View for user
 
 export default {
   auth: false,
@@ -30,7 +50,6 @@ export default {
       }
     }
     catch (err) {
-      console.log("err", err.response.status, err.response.message, err.response.data)
       let text = "Verification failed. Request for resend verification email."
       if (err.response.status === 403) {
         text = "Your account already verified."
@@ -46,14 +65,28 @@ export default {
       app.store.dispatch("setVerificationMessage", false)
     }
   },
+  data () {
+    return {
+      timerCountdown: 5
+    }
+  },
   computed: {
     ...mapState({
       verificationMessage: state => state.verificationMessage
-    })
+    }),
+    verificationResult () {
+      if (this.verificationMessage) {
+        return "Verification success."
+      }
+      return "Verification failed."
+    }
   },
   mounted () {
     setTimeout(() => {
-      // this.$nuxt.$router.push({ name: `signin___${this.$i18n.locale}` })
+      this.$nuxt.$router.push({ name: `signin___${this.$i18n.locale}` })
+    }, 5000)
+    setInterval(() => {
+      this.timerCountdown--
     }, 5000)
   }
 }

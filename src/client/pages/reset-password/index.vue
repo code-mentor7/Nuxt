@@ -63,6 +63,12 @@
             </v-card-actions>
           </v-form>
         </v-card>
+        <v-card
+          v-else
+          class="elevation-10">
+          <div class="display-2">Link invalid/expired.
+          You will be redirected in {{ timerCountdown }} seconds.</div>
+        </v-card>
       </v-flex>
     </v-layout>
   </v-container>
@@ -75,12 +81,11 @@ import {
 } from "vuelidate/lib/validators"
 import { validationMixin } from "vuelidate"
 import { mapState } from "vuex"
-// TODO: test Reset attempt lock
-// TODO: View if token invalid
+
 export default {
   auth: false,
-  mixins: [validationMixin],
   middleware: ["guest-only"],
+  mixins: [validationMixin],
   async fetch ({ app, store, redirect, route }) {
     try {
       if (route.query.i === undefined) {
@@ -107,14 +112,15 @@ export default {
   },
   data () {
     return {
+      alertType: "success",
+      confirm_password: null,
+      isAlert: false,
+      message: "",
+      password: null,
       showPassword: false,
       showConfirmPassword: false,
-      password: null,
-      confirm_password: null,
       submitted: false,
-      isAlert: false,
-      alertType: "success",
-      message: "",
+      timerCountdown: 5,
       validationProps: {
         password: {
           required
@@ -134,6 +140,9 @@ export default {
     if (this.resetPasswordStatus === false) {
       setTimeout(() => {
         this.$nuxt.$router.push({ name: `forgot-password___${this.$i18n.locale}` })
+      }, 5000)
+      setInterval(() => {
+        this.timerCountdown--
       }, 5000)
     }
   },
