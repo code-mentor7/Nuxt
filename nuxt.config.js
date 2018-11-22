@@ -63,14 +63,14 @@ module.exports = {
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Lato:300,400,500,700|Material+Icons" }
     ]
   },
-  // loading: '~/components/loading.vue',
-  loading: {
-    color: "#00FF00",
-    height: "5px",
-    // color: 'linear-gradient(45deg, rgba(255,0,0,1) 0%, rgba(255,255,0,1) 25%, rgba(5,193,255,1) 50%, rgba(255,255,0,1) 75%, rgba(255,0,0,1) 100%)',
-    continuous: true
-    // css: false
-  },
+  loading: "~/components/Loading.vue",
+  // loading: {
+  //   color: "#00FF00",
+  //   height: "5px",
+  //   // color: 'linear-gradient(45deg, rgba(255,0,0,1) 0%, rgba(255,255,0,1) 25%, rgba(5,193,255,1) 50%, rgba(255,255,0,1) 75%, rgba(255,0,0,1) 100%)',
+  //   continuous: true
+  //   // css: false
+  // },
   manifest: {
     name: "vueniverse",
     description: "A Vueniverse project",

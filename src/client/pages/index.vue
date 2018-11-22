@@ -1,7 +1,7 @@
 <template>
   <section>
     <v-carousel
-      v-if="landingPage"
+      v-show="landingPage"
       hide-delimiters
       class="wrapper-slide">
       <v-carousel-item
@@ -94,7 +94,6 @@
                 >
                   <v-text-field
                     v-model="homeData[value + 'Search']"
-                    :error-messages="checkError(`${value}Search`, validationProps.homeData, $v.homeData, 'This')"
                     :label="$t('landingPage.search')"
                     :name="`${value} Search`"
                     autofocus
@@ -183,6 +182,67 @@
                 <v-card :hover="true">
                   <v-img
                     :src=" value.media_id | cloudinaryImageUrl | determineImgSrc"
+                    height="200px"
+                    gradient="to top right, rgba(100,115,201,0), rgba(25,32,72,.7)"
+                  >
+                    <v-layout
+                      slot="placeholder"
+                      fill-height
+                      align-center
+                      justify-center
+                      ma-0
+                    >
+                      <v-progress-circular
+                        indeterminate
+                        color="grey lighten-5"/>
+                    </v-layout>
+                    <v-layout
+                      pa-2
+                      row
+                      fill-height
+                      class="lightbox white--text">
+                      <v-spacer/>
+                      <v-flex shrink>
+                        <div
+                          class="headline white--text font-enforce font-weight-thin"
+                          v-text="$t(`landingPage.${value.title}`)"/>
+
+                      </v-flex>
+
+                    </v-layout>
+                    <!-- <v-container
+                      fill-height
+                      fluid
+                      pa-2
+                    >
+                      <v-layout
+                        fill-height
+                        row
+                        wrap>
+                        <v-flex
+                          xs12
+                          align-end
+                          flexbox>
+                          <span
+                            class="headline white--text font-enforce font-weight-thin"
+                            v-text="$t(`landingPage.${value.title}`)"/>
+                        </v-flex>
+                      </v-layout>
+                    </v-container> -->
+                  </v-img>
+                </v-card>
+              </v-flex>
+            </template>
+            <!-- <template v-for="(value, i) in landingPage.hotel_destination_1">
+              <v-flex
+                :key="`hotel_destination_1${i}`"
+                lg4
+                xs12
+                class="px-3 py-3"
+                @click="hotelDestinationClick(value.title)">
+                <v-card :hover="true">
+                  <v-img
+                    :src=" value.media_id | cloudinaryImageUrl | determineImgSrc"
                     :lazy-src=" value.media_id | cloudinaryImageUrl | determineImgSrc"
                     height="200px"
                     gradient="to top right, rgba(100,115,201,0), rgba(25,32,72,.7)"
@@ -209,7 +269,7 @@
                   </v-img>
                 </v-card>
               </v-flex>
-            </template>
+            </template> -->
             <v-flex
               xs12
               class="px-3">
@@ -232,7 +292,32 @@
                     height="200px"
                     gradient="to top right, rgba(100,115,201,0), rgba(25,32,72,.7)"
                   >
-                    <v-container
+                    <v-layout
+                      slot="placeholder"
+                      fill-height
+                      align-center
+                      justify-center
+                      ma-0
+                    >
+                      <v-progress-circular
+                        indeterminate
+                        color="grey lighten-5"/>
+                    </v-layout>
+                    <v-layout
+                      pa-2
+                      row
+                      fill-height
+                      class="lightbox white--text">
+                      <v-spacer/>
+                      <v-flex shrink>
+                        <div
+                          class="headline white--text font-enforce font-weight-thin"
+                          v-text="$t(`landingPage.${value.title}`)"/>
+
+                      </v-flex>
+
+                    </v-layout>
+                    <!-- <v-container
                       fill-height
                       fluid
                       pa-2
@@ -250,7 +335,7 @@
                             v-text="$t(`landingPage.${value.title}`)"/>
                         </v-flex>
                       </v-layout>
-                    </v-container>
+                    </v-container> -->
                   </v-img>
                 </v-card>
               </v-flex>
@@ -305,25 +390,16 @@
 
 <script>
 import moment from "moment"
-import {
-  required
-} from "vuelidate/lib/validators"
-import { validationMixin } from "vuelidate"
 import DatePicker from "~/components/DatePicker.vue"
 
 export default {
   async asyncData ({ app }) {
     const landingPage = await app.$axios.$get("/api/landing-page")
-    console.log("asyncData index", landingPage[0])
     return { landingPage: landingPage[0] }
   },
   auth: false,
   components: {
     DatePicker
-  },
-  mixins: [validationMixin],
-  fetch () {
-    console.log("Fetch")
   },
   head () {
     return {
@@ -354,14 +430,7 @@ export default {
         tourEndDate: ""
       },
       startDatePicker: false,
-      tab: ["tour", "hotel"],
-      validationProps: {
-        homeData: {
-          hotelSearch: { required },
-          // cruiseSearch: {required},
-          tourSearch: {}
-        }
-      }
+      tab: ["tour", "hotel"]
     }
   },
   i18n: {
@@ -422,7 +491,6 @@ export default {
   },
   methods: {
     search (type) {
-      this.$v.$touch()
       // if(this.homeData[`${type}Search`]){
       let startDate = moment(this.homeData[`${type}StartDate`], "YYYY-MM-DD").format("X")
       let endDate = moment(this.homeData[`${type}EndDate`], "YYYY-MM-DD").format("X")
@@ -446,7 +514,7 @@ export default {
       // }
     },
     changeTab () {
-      this.$v.$reset()
+      // this.$v.$reset()
     },
     datePicked (date, varNameRef, index, id) {
       this.homeData[`${varNameRef}`] = date
@@ -474,9 +542,6 @@ export default {
       }
 
       return date
-    },
-    validations () {
-      return this.validationProps
     }
   }
 }
@@ -487,7 +552,7 @@ export default {
 .wrapper-slide {
     width:100% !important;
     height:45vh !important;
-    overflow: visible !important;
+    overflow: hidden !important;
 }
 
 @media (min-width: 959px)  {

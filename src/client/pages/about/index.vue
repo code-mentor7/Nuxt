@@ -33,8 +33,6 @@
 
 <script>
 export default {
-  fetch ({ store, params }) {
-    console.log(" component fetch here")
-  }
+  auth: false
 }
 </script>
