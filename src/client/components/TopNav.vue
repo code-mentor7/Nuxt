@@ -329,9 +329,6 @@ import { mapState } from "vuex"
 import ChangePasswordDialog from "~/components/Dialog/ChangePasswordDialog.vue"
 
 export default {
-  fetch () {
-    console.log("Fetch")
-  },
   components: {
     ChangePasswordDialog
   },
@@ -360,10 +357,6 @@ export default {
     ...mapState({
       isLoggedIn: state => state.auth.loggedIn
     }),
-    // ...mapGetters("layout", [
-    //   "isFullPageLoading",
-    //   "localeLang",
-    // ]),
     filteredLangList () {
       return this.langList.filter(langObj => langObj.value !== this.lang.value)
     }

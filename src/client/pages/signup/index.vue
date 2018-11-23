@@ -133,6 +133,20 @@ import { debounce } from "lodash"
 import tncDialog from "~/components/Dialog/TermsAndConditionsDialog.vue"
 
 const checked = withParams({ type: "checked" }, value => value === true)
+const uniqueEmail = withParams({ type: "uniqueEmail" }, value => {
+  console.log("value", value)
+  return value
+})
+// const uniqueEmail = withParams({type: 'uniqueEmail'}, value => {
+//   let today = new Date();
+//   let birthDate = new Date(value)
+//   let age = today.getFullYear() - birthDate.getFullYear()
+//   let m = today.getMonth() - birthDate.getMonth()
+//   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+//     age--
+//   }
+//   return age >= 21 && age <= 100;
+// })
 
 export default {
   auth: false,
@@ -167,6 +181,7 @@ export default {
         email: {
           required,
           email
+          // uniqueEmail
         },
         mobile_number: { required },
         name: { required },
@@ -183,7 +198,8 @@ export default {
   computed: {
     emailErrors () {
       const err = this.checkError("email", this.validationProps, this.$v)
-      return [...err, ...this.isEmailExist]
+      return [...err]
+      // return [...err, ...this.isEmailExist]
     }
   },
   mounted () {

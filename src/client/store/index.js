@@ -50,6 +50,16 @@ export const actions = {
   async nuxtServerInit ({ commit }, { app }) {
     // const ip = await app.$axios.$get('http://icanhazip.com')
     // commit('SET_IP', ip)
+    let promiseArr = [
+      app.$axios.$get("/api/landing-page"),
+      app.$axios.$get("/api/site-identity")
+    ]
+
+    await Promise.all(promiseArr)
+      .then(async (promiseResultArray) => {
+        await commit("api/SET_LANDING_PAGE", promiseResultArray[0][0])
+        await commit("api/SET_SITE_IDENTITY", promiseResultArray[1][0])
+      })
   },
   showSideBar ({ commit }, value) {
     commit("SHOW_SIDE_BAR", value)

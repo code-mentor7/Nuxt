@@ -1,7 +1,7 @@
 <template>
   <section>
     <v-carousel
-      v-show="landingPage"
+      v-if="landingPage"
       hide-delimiters
       class="wrapper-slide">
       <v-carousel-item
@@ -37,6 +37,7 @@
 
     </v-carousel>
     <v-tabs
+      v-if="landingPage"
       centered
       height="60px"
       color="blue-gradient"
@@ -392,11 +393,9 @@
 import moment from "moment"
 import DatePicker from "~/components/DatePicker.vue"
 
+import { mapState } from "vuex"
+
 export default {
-  async asyncData ({ app }) {
-    const landingPage = await app.$axios.$get("/api/landing-page")
-    return { landingPage: landingPage[0] }
-  },
   auth: false,
   components: {
     DatePicker
@@ -485,9 +484,12 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState({
+      landingPage: state => state.api.landingPage
+    })
+  },
   mounted () {
-    // this.$root.$loading.start()
-    // this.fetchSomething()
   },
   methods: {
     search (type) {

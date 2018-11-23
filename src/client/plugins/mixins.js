@@ -28,11 +28,14 @@ const mixins = {
         minLength: `${this.capitalize(displayName)} must have at least ${vuelidateObj[fieldName].$params.minLength ? vuelidateObj[fieldName].$params.minLength.min : ""} characters`,
         minValue: `${this.capitalize(displayName)} must be at least ${vuelidateObj[fieldName].$params.minValue ? vuelidateObj[fieldName].$params.minValue.min : ""}`,
         maxValue: `${this.capitalize(displayName)} must be at most ${vuelidateObj[fieldName].$params.maxValue ? vuelidateObj[fieldName].$params.maxValue.max : ""}`,
-        email: `${this.capitalize(displayName)} is invalid`
+        email: `${this.capitalize(displayName)} is invalid`,
+        uniqueEmail: `Email already exist`
       }
 
       _.each(validationProps[fieldName], (value, key) => {
+        console.log("fieldName", fieldName, value, key)
         if (!vuelidateObj[fieldName][key]) {
+          console.log("vuelidateObj[fieldName]", vuelidateObj[fieldName])
           if (typeof value !== "function") {
             errors.push(value)
           }

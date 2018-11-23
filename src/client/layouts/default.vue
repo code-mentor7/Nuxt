@@ -24,9 +24,6 @@ export default {
     Snackbar,
     TopNav
   },
-  fetch () {
-    console.log("Fetch")
-  },
   methods: {
     contentClass () {
       let contentClass = ""
