@@ -84,6 +84,7 @@ import { mapState } from "vuex"
 
 export default {
   auth: false,
+  layout: "noFooterTransparentNav",
   middleware: ["guest-only"],
   mixins: [validationMixin],
   async fetch ({ app, store, redirect, route }) {

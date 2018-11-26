@@ -150,6 +150,7 @@ const uniqueEmail = withParams({ type: "uniqueEmail" }, value => {
 
 export default {
   auth: false,
+  layout: "noFooterTransparentNav",
   middleware: ["guest-only"],
   components: {
     tncDialog

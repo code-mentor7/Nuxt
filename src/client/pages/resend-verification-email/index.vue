@@ -56,6 +56,7 @@ import { validationMixin } from "vuelidate"
 
 export default {
   auth: false,
+  layout: "noFooterTransparentNav",
   mixins: [validationMixin],
   middleware: ["guest-only"],
   data () {

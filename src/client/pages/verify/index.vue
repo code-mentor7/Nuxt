@@ -28,6 +28,7 @@ import { mapState } from "vuex"
 
 export default {
   auth: false,
+  layout: "noFooterTransparentNav",
   middleware: ["guest-only"],
   async fetch ({ app, store, redirect, route }) {
     try {

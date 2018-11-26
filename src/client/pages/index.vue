@@ -397,6 +397,7 @@ import { mapState } from "vuex"
 
 export default {
   auth: false,
+  layout: "transparentNav",
   components: {
     DatePicker
   },

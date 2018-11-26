@@ -1,7 +1,8 @@
 <template>
   <v-app>
-    <top-nav />
+    <top-nav :nav-color="'transparent'" />
     <v-content
+      class="pa-0"
       app
     >
       <snackbar />

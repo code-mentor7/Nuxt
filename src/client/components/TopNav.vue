@@ -117,7 +117,7 @@
       </v-list>
     </v-navigation-drawer>
     <v-toolbar
-      :color="isTransparentColor()"
+      :color="navColor"
       :class="toolbarClass()"
       :scroll-threshold="30"
       :clipped-left="$vuetify.breakpoint.mdAndUp"
@@ -332,6 +332,13 @@ export default {
   components: {
     ChangePasswordDialog
   },
+  props: {
+    navColor: {
+      type: String,
+      default: ""
+    }
+
+  },
   data () {
     return {
       sideBarModel: false,
@@ -393,16 +400,16 @@ export default {
         this.$route.path.indexOf("reset-password") === -1
       )
     },
-    checkPathForTransparent () {
-      return (
-        this.$route.path === "/" ||
-        this.$route.path === "/signin" ||
-        this.$route.path === "/signup" ||
-        this.$route.path === "/forgot-password" ||
-        this.$route.path === "/resend-verification" ||
-        this.$route.path.indexOf("reset-password") !== -1
-      )
-    },
+    // checkPathForTransparent () {
+    //   return (
+    //     this.$route.path === "/" ||
+    //     this.$route.path === "/signin" ||
+    //     this.$route.path === "/signup" ||
+    //     this.$route.path === "/forgot-password" ||
+    //     this.$route.path === "/resend-verification" ||
+    //     this.$route.path.indexOf("reset-password") !== -1
+    //   )
+    // },
     fontClass () {
       let fontClass = "primary--text"
       if (this.checkPathForFont() || this.offsetTop > 10) {
@@ -410,15 +417,15 @@ export default {
       }
       return fontClass
     },
-    isTransparentColor () {
-      let color = ""
-      // need give more offset to not have color fade, instant color change
-      if (this.checkPathForTransparent() && this.offsetTop < 300) {
-        color = "transparent"
-      }
+    // isTransparentColor () {
+    //   let color = ""
+    //   // need give more offset to not have color fade, instant color change
+    //   if (this.checkPathForTransparent() && this.offsetTop < 300) {
+    //     color = "transparent"
+    //   }
 
-      return color
-    },
+    //   return color
+    // },
     logout () {
       this.loggingOut = true
       this.$auth.logout()
