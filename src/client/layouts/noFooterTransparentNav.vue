@@ -12,7 +12,6 @@
 </template>
 
 <script>
-// TODO: Setup Different layout for differen pages, no footer, transparent nav, etc
 import Snackbar from "~/components/Snackbar.vue"
 import TopNav from "~/components/TopNav.vue"
 

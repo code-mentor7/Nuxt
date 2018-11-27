@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const landingPageSchema = new mongoose.Schema({
+const productSchema = new mongoose.Schema({
   "name": {
     type: String,
     index: 1
@@ -250,11 +250,11 @@ const landingPageSchema = new mongoose.Schema({
 
 })
 
-const LandingPage = mongoose.model("products", landingPageSchema, "products")
+const Product = mongoose.model("products", productSchema, "products")
 
-landingPageSchema.pre("save", function (next) {
+productSchema.pre("save", function (next) {
   // this._id = this._id.toString()
   next()
 })
 
-export default LandingPage
+export default Product
