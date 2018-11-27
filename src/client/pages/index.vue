@@ -100,7 +100,6 @@
                     autofocus
                     append-icon="search"
                     light
-                    @input="$v.homeData[value + 'Search'].$touch()"
                   />
                 </v-flex>
                 <v-flex
@@ -506,7 +505,8 @@ export default {
       if (moment(this.homeData[`${type}EndDate`], "YYYY-MM-DD").isValid()) {
         routeQuery.co = endDate
       }
-      this.$router.push({ name: `${this.capitalize(type)}SearchResult`, query: routeQuery })
+      this.$router.push({ name: `${type}-search___${this.$i18n.locale}`, query: routeQuery })
+      // this.$router.push({ name: `${this.capitalize(type)}SearchResult`, query: routeQuery })
       // }
       // else{
       //     this.setupSnackbar({

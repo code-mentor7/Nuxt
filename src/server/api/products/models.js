@@ -250,6 +250,18 @@ const productSchema = new mongoose.Schema({
 
 })
 
+productSchema.index({
+  "name": "text",
+  "location_to_be_display": "text",
+  "highlights": "text",
+  "description": "text",
+  "merchant_name": "text",
+  "translation.name": "text",
+  "translation.location_to_be_display": "text",
+  "translation.highlights": "text",
+  "translation.description": "text"
+}, { name: "textSearch", background: true })
+
 const Product = mongoose.model("products", productSchema, "products")
 
 productSchema.pre("save", function (next) {

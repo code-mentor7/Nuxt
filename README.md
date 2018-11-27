@@ -7,4 +7,5 @@ API whitelist
 Handle mongo connection refused
 vuetify loader
 vuetify ala carte ?
-mongoose text search
+mongoose find and count ?
+error not found page

@@ -1,13 +1,16 @@
 import { Router } from "express"
 // import authenticate from '~/middleware/authenticate'
 import controllers from "./controllers"
-import LandingPage from "./models"
 
 const router = Router()
 
 // router.param("id", controllers.findByParam)
 
-router.get("/", controllers.getAll)
+// router.get("/", controllers.getAll)
+
+router.route("/")
+  .post(controllers.textSearch)
+
 router.route("/:id")
   .get(function (req, res) {
     // var mongoose = require('mongoose')

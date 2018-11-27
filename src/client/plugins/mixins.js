@@ -33,9 +33,7 @@ const mixins = {
       }
 
       _.each(validationProps[fieldName], (value, key) => {
-        console.log("fieldName", fieldName, value, key)
         if (!vuelidateObj[fieldName][key]) {
-          console.log("vuelidateObj[fieldName]", vuelidateObj[fieldName])
           if (typeof value !== "function") {
             errors.push(value)
           }
