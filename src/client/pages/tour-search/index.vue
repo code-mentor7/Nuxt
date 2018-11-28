@@ -300,7 +300,7 @@ export default {
     },
     datePicked (date, varNameRef, index, id) {
       this.tourData[`${varNameRef}`] = date
-      if (varNameRef.indexOf("StartDate") != -1) {
+      if (varNameRef.indexOf("StartDate") !== -1) {
         this.tourData.endDate = ""
       }
     },
@@ -322,10 +322,12 @@ export default {
     search () {
       this.$v.$touch()
       if (!this.$v.invalid) {
+        const unixStartDate = this.tourData.startDate ? moment(this.tourData.startDate, "YYYY-MM-DD").format("X") : ""
+        const unixEndDate = this.tourData.endDate ? moment(this.tourData.endDate, "YYYY-MM-DD").format("X") : ""
         let routeQuery = {
           keywords: this.tourData.search,
-          ci: this.tourData.startDate,
-          co: this.tourData.endDate
+          ci: unixStartDate,
+          co: unixEndDate
         }
         this.$router.push({ name: `tour-search___${this.$i18n.locale}`, query: routeQuery })
       }

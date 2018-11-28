@@ -21,8 +21,16 @@ export const controllers = {
     return model.find({})
   },
 
-  async textSearch (model, searchValue, searchFilter = {}, searchOptions = { limit: 10, skip: 0 }) {
-    return model.find({ $text: { $search: searchValue }, ...searchFilter }, null, searchOptions)
+  textSearch (model, searchValue, searchFilter = {}, searchOptions = { limit: 10, skip: 0 }) {
+    let query = { ...searchFilter }
+    let projection = {}
+    if (searchValue) {
+      query["$text"] = { $search: searchValue }
+    }
+    else {
+      projection.sort = { updated_at: -1 }
+    }
+    return model.find(query, null, searchOptions)
   },
 
   updateOne (docToUpdate, update) {
