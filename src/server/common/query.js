@@ -23,14 +23,21 @@ export const controllers = {
 
   textSearch (model, searchValue, searchFilter = {}, searchOptions = { limit: 10, skip: 0 }) {
     let query = { ...searchFilter }
-    let projection = {}
     if (searchValue) {
       query["$text"] = { $search: searchValue }
     }
     else {
-      projection.sort = { updated_at: -1 }
+      searchOptions.sort = { updated_at: -1 }
     }
     return model.find(query, null, searchOptions)
+  },
+
+  textSearchCount (model, searchValue, searchFilter = {}) {
+    let query = { ...searchFilter }
+    if (searchValue) {
+      query["$text"] = { $search: searchValue }
+    }
+    return model.countDocuments(query)
   },
 
   updateOne (docToUpdate, update) {
@@ -93,6 +100,19 @@ export const textSearch = (model) => async (req, res, next) => {
     })
 }
 
+export const textSearchCount = (model) => async (req, res, next) => {
+  const searchValue = req.body.search
+  const searchFilter = req.body.filter
+
+  return controllers.textSearchCount(model, searchValue, searchFilter)
+    .then(doc => {
+      res.status(200).json(doc)
+    })
+    .catch(error => {
+      next(error)
+    })
+}
+
 export const updateOne = (model) => async (req, res, next) => {
   const docToUpdate = req.docFromId
   const update = req.body
@@ -110,6 +130,7 @@ export const generateControllers = (model, overrides = {}) => {
     getAll: getAll(model),
     getOne: getOne(model),
     textSearch: textSearch(model),
+    textSearchCount: textSearchCount(model),
     updateOne: updateOne(model)
   }
 

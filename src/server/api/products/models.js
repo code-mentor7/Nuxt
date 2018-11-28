@@ -1,4 +1,6 @@
 import mongoose from "mongoose"
+import Merchants from "../merchants/models"
+const Schema = mongoose.Schema
 
 const productSchema = new mongoose.Schema({
   "name": {
@@ -119,7 +121,8 @@ const productSchema = new mongoose.Schema({
     type: Date,
     optional: true
   },
-  "merchant_id": { type: String },
+  "merchant_id": { type: Schema.Types.ObjectId, ref: "Merchant" },
+  // "merchant_id": { type: String },
   "merchant_name": { type: String, optional: true },
   "itinerary": {
     type: Array,
@@ -262,11 +265,15 @@ productSchema.index({
   "translation.description": "text"
 }, { name: "textSearch", background: true })
 
-const Product = mongoose.model("products", productSchema, "products")
-
 productSchema.pre("save", function (next) {
   // this._id = this._id.toString()
   next()
 })
+
+productSchema.pre("find", function () {
+  this.populate({ path: "merchant_id", model: Merchants })
+})
+
+const Product = mongoose.model("products", productSchema, "products")
 
 export default Product

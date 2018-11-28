@@ -2,8 +2,7 @@
 export const state = () => {
   return {
     landingPage: {},
-    siteIdentity: {},
-    tours: []
+    siteIdentity: {}
   }
 }
 
@@ -13,9 +12,6 @@ export const mutations = {
   },
   SET_SITE_IDENTITY (state, value) {
     state.siteIdentity = value
-  },
-  SET_TOURS (state, value) {
-    state.tours = value
   }
 }
 export const actions = {
@@ -24,9 +20,6 @@ export const actions = {
   },
   setSiteIdentity ({ commit }, value) {
     commit("SET_SITE_IDENTITY", value)
-  },
-  setTours ({ commit }, value) {
-    commit("SET_TOURS", value)
   }
 
 }

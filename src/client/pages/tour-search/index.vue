@@ -72,19 +72,25 @@
       <v-flex
         lg8
         sm12
+        column>
+        {{ toursCount }} qwe
+      </v-flex>
+      <v-flex
+        lg8
+        sm12
         row>
         <v-data-iterator
           :items="localTours"
           :rows-per-page-items="itemPerRow"
           :pagination.sync="pagination"
-          :total-items="totalCount"
-          :hide-actions="totalCount == 0"
+          :total-items="toursCount"
+          :hide-actions="toursCount == 0"
           content-tag="v-layout"
           row
           wrap
         >
           <v-flex
-            v-show="totalCount == 0"
+            v-show="toursCount == 0"
             slot="no-data"
             xs12>
             <h1
@@ -202,7 +208,7 @@ export default {
       if (route.query.co) {
         endDate = moment.unix(route.query.co).format("YYYY-MM-DD")
       }
-      const products = await app.$axios.$post("/api/products", {
+      const getData = app.$axios.$post("/api/products", {
         search: searchValue,
         filter: {
           disabled: false,
@@ -211,7 +217,38 @@ export default {
           }
         }
       })
-      app.store.dispatch("api/setTours", products)
+      const getCount = app.$axios.$post("/api/products/count", {
+        search: searchValue,
+        filter: {
+          disabled: false,
+          tour_addons_expiration_date: {
+            $gte: endDate
+          }
+        }
+      })
+      let promiseArr = [
+        getData,
+        getCount
+      ]
+
+      let products = []
+      let productsCount = 0
+      await Promise.all(promiseArr)
+        .then((promiseResultArray) => {
+          products = promiseResultArray[0]
+          productsCount = promiseResultArray[1]
+        })
+      // const products = await app.$axios.$post("/api/products", {
+      //   search: searchValue,
+      //   filter: {
+      //     disabled: false,
+      //     tour_addons_expiration_date: {
+      //       $gte: endDate
+      //     }
+      //   }
+      // })
+      app.store.dispatch("tours/setTours", products)
+      app.store.dispatch("tours/setToursCount", productsCount)
     }
     catch (err) {
       console.log("&&&", err)
@@ -243,7 +280,7 @@ export default {
       query: {},
       selector: {},
       time: new Date().getTime(),
-      totalCount: 0,
+      totalCount: this.toursCount,
       pagination: {},
       tourData: {
         search: this.$route.query.keywords || "",
@@ -266,7 +303,8 @@ export default {
   },
   computed: {
     ...mapState({
-      tours: state => state.api.tours
+      tours: state => state.tours.tours,
+      toursCount: state => state.tours.toursCount
     }),
     localTours () {
       if (this.$i18n.locale === "en") {
@@ -294,6 +332,7 @@ export default {
 
   methods: {
     getDataFromApi () {
+      // TODO: pagination for SSR is not working
       const { sortBy, descending, page, rowsPerPage } = this.pagination
       this.skip = rowsPerPage * (page - 1) || 0
       this.limit = rowsPerPage || 0

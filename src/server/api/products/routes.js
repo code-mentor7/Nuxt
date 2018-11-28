@@ -11,6 +11,9 @@ const router = Router()
 router.route("/")
   .post(controllers.textSearch)
 
+router.route("/count")
+  .post(controllers.textSearchCount)
+
 router.route("/:id")
   .get(function (req, res) {
     // var mongoose = require('mongoose')

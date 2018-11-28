@@ -7,5 +7,5 @@ API whitelist
 Handle mongo connection refused
 vuetify loader
 vuetify ala carte ?
-mongoose find and count ?
+optimize mongoose find and count ? https://mongoosejs.com/docs/api.html#model_Model.countDocuments
 error not found page
