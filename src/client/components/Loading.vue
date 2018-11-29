@@ -16,12 +16,9 @@ export default {
   methods: {
     start () {
       // https://vuejsdevelopers.com/2018/07/16/7-tips-large-nuxt-app-vue/
-      console.log("### loading start")
       this.loading = true
     },
     finish () {
-      console.log("### loading end")
-
       this.loading = false
     }
   }

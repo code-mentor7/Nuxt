@@ -196,6 +196,7 @@ import DatePicker from "~/components/DatePicker.vue"
 export default {
   auth: false,
   async asyncData ({ app, store, redirect, route }) {
+    console.log("### async")
     try {
       let startDate
       let endDate = new Date()
@@ -234,6 +235,7 @@ export default {
       await Promise.all(promiseArr)
         .then((promiseResultArray) => {
           hotels = promiseResultArray[0]
+          console.log("### hotels", hotels)
           hotelsCount = promiseResultArray[1]
         })
       app.store.dispatch("hotels/setHotels", hotels)
@@ -310,6 +312,9 @@ export default {
     async getDataFromApi () {
       const { sortBy, descending, page, rowsPerPage } = this.pagination
       this.skip = rowsPerPage * (page - 1) || 0
+      if (!rowsPerPage) {
+        return ""
+      }
       if (this.skip === 0 && this.limit === rowsPerPage) {
         return ""
       }

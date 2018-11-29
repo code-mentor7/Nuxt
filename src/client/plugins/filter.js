@@ -36,7 +36,7 @@ const filters = {
     if (imgSrc) {
       return imgSrc
     }
-    return "/404.png"
+    return require("~/assets/img/404.png")
   },
   formatDate (val) {
     return moment(val).format("YYYY-MM-DD hh:mm")

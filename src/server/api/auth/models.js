@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 import bcrypt from "bcryptjs"
 import { ServerError } from "express-server-error"
+import Merchants from "../merchants/models"
 
 // TODO: Customer Roles
 
@@ -8,6 +9,9 @@ const customerSchema = new mongoose.Schema({
   "name": {
     type: String,
     require: true
+  },
+  "merchant_id": {
+    type: String
   },
   "email": {
     type: String,
@@ -31,14 +35,82 @@ const customerSchema = new mongoose.Schema({
     type: Object,
     blackbox: true
   },
-  "cart": {
-    type: Array,
-    default: []
-  },
-  "cart.$": {
-    type: Object,
-    blackbox: true
-  },
+  "cart": [{
+    adult_discounted_amount: {
+      type: Number,
+      default: 0
+    },
+    adult_quantity: {
+      type: Number,
+      default: 0
+    },
+    adult_total_price: {
+      type: Number,
+      default: 0
+    },
+    adult_unit_price: {
+      type: Number,
+      default: 0
+    },
+    child_discounted_amount: {
+      type: Number,
+      default: 0
+    },
+    child_quantity: {
+      type: Number,
+      default: 0
+    },
+    child_total_price: {
+      type: Number,
+      default: 0
+    },
+    child_unit_price: {
+      type: Number,
+      default: 0
+    },
+    is_insurance: {
+      type: Boolean,
+      default: false
+    },
+    is_tour_guide: {
+      type: Boolean,
+      default: false
+    },
+    merchant_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "merchants"
+    },
+    product_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "products"
+    },
+    total_price: {
+      type: Number,
+      default: 0
+    },
+    tour_guide_index: {
+      type: Number,
+      default: 0
+    },
+    tour_guide_name: {
+      type: String
+    },
+    tour_guide_price: {
+      type: Number,
+      default: 0
+    },
+    travel_end_date: {
+      type: Date
+    },
+    travel_start_date: {
+      type: Date
+    }
+  }],
+  // "cart.$": {
+  //   type: Object,
+  //   blackbox: true,
+  //   default: {}
+  // },
   "billing_address": {
     type: Array,
     default: []
@@ -100,6 +172,11 @@ const customerSchema = new mongoose.Schema({
     createdAt: "created_at",
     updatedAt: "updated_at"
   }
+})
+
+customerSchema.pre("findOne", function () {
+  this.populate({ path: "cart.merchant_id", model: Merchants })
+  this.populate({ path: "cart.product_id", model: "products" })
 })
 
 customerSchema.pre("save", async function (next) {

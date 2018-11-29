@@ -54,7 +54,6 @@ export const actions = {
       app.$axios.$get("/api/landing-page"),
       app.$axios.$get("/api/site-identity")
     ]
-
     await Promise.all(promiseArr)
       .then(async (promiseResultArray) => {
         await commit("api/SET_LANDING_PAGE", promiseResultArray[0][0])

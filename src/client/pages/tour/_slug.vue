@@ -403,7 +403,6 @@ import TourCartInputControl from "~/components/TourCartInputControl.vue"
 export default {
   async asyncData ({ app, store, redirect, route }) {
     try {
-      console.log("### route.params", route.params.slug)
       let endDate = new Date()
       if (route.query.co) {
         endDate = moment.unix(route.query.co).format("YYYY-MM-DD")
@@ -417,7 +416,6 @@ export default {
           }
         }
       })
-      console.log("### product", product)
       if (!product || product.length === 0) {
         // redirect to 404
       }

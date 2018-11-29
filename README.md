@@ -10,3 +10,5 @@ optimize mongoose find and count ? https://mongoosejs.com/docs/api.html#model_Mo
 error not found page
 loading: https://github.com/nuxt/nuxt.js/tree/dev/examples/custom-loading
 migrate db
+get fresh user
+incorrect html markup

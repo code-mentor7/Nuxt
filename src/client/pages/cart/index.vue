@@ -316,7 +316,7 @@
 <script>
 import _ from "lodash"
 // import { Customers } from "/imports/collections/customers"
-// import { mapGetters, mapActions } from "vuex"
+import { mapState } from "vuex"
 // import { Products } from "/imports/collections/products"
 
 export default {
@@ -328,6 +328,55 @@ export default {
       total_amount: 0
     }
     return defaultData
+  },
+  computed: {
+    ...mapState({
+      isLoggedIn: state => state.auth.loggedIn,
+      customerData: state => state.auth.user
+    }),
+    carts () {
+      let cart = []
+      let totalPrice = 0
+      let totalHandlingFee = 0
+
+      this.customerData.cart.forEach((_cart, index) => {
+        let cartPrice = 0
+        let discountedAmount = 0
+        _cart.is_discount = false
+        // var prod = Products.findOne({ _id: _cart.product_id })
+        if (_cart.product_id) {
+          delete _cart.handling_fee
+          // prod = _.pick(prod, ["adult_selling_price", "adult_promotion_price", "kid_selling_price", "kid_promotion_price",
+          //   "name", "slug", "primary_image_id", "merchant_id", "sku",
+          //   "adult_travel_insurance_fee", "child_travel_insurance_fee", "handling_fee", "adult_purchase_discount", "child_purchase_discount"])
+
+          _cart = { ..._cart, ..._cart.product_id }
+
+          let cartCalObj = this.productPriceCalculation(_cart, _cart.adult_quantity, _cart.child_quantity)
+          cartPrice = Number(cartCalObj.totalPrice)
+          _cart.adult_discount_amount = cartCalObj.adultDiscountedAmount
+          _cart.child_discount_amount = cartCalObj.childDiscountedAmount
+          _cart.adult_unit_price = cartCalObj.adultUnitPrice
+          _cart.child_unit_price = cartCalObj.childUnitPrice
+
+          discountedAmount = cartCalObj.adultDiscountedAmount + cartCalObj.childDiscountedAmount
+          if (discountedAmount > 0) {
+            _cart.is_discount = true
+          }
+          if (_cart.product_id.handling_fee) {
+            totalHandlingFee += _cart.product_id.handling_fee
+          }
+          totalPrice += cartPrice
+          _cart.cart_price = cartPrice
+          _cart.discounted_amount = discountedAmount
+        }
+        cart.push(_cart)
+      })
+      this.handling_fee = totalHandlingFee
+      this.subtotal = totalPrice
+      this.total_amount = this.handling_fee + this.subtotal
+      return cart
+    }
   },
   created () {
     if (this.userId) {

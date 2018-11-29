@@ -34,7 +34,21 @@ export const login = {
 
 export const user = {
   async get (req, res) {
-    res.json({ user: req.user })
+    try {
+      if (req.user._id) {
+        let cust = await Customer.findOne({ _id: req.user._id })
+
+        if (cust.length !== 0) res.json({ user: cust.toObject() })
+        else throw new ServerError("User not found", { status: 404, log: false })
+      }
+      else {
+        throw new ServerError("Query not supported.", { status: 400 })
+      }
+    }
+    catch (error) {
+      res.handleServerError(error)
+    }
+    // res.json({ user: req.user })
   }
 }
 

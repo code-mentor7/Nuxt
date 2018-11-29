@@ -49,6 +49,17 @@ const hotelsSchema = new mongoose.Schema({
   updatedAt: "updated_at"
 })
 
+hotelsSchema.index({
+  hotel_name: "text",
+  hotel_translated_name: "text",
+  addressline1: "text",
+  addressline2: "text",
+  zipcode: "text",
+  city: "text",
+  state: "text",
+  country: "text"
+}, { name: "hotelIndexing", background: true })
+
 const Hotels = mongoose.model("Hotel_data", hotelsSchema, "hotel_data")
 
 export default Hotels

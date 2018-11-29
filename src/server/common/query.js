@@ -25,7 +25,7 @@ export const controllers = {
     return model.find({})
   },
 
-  textSearch (model, searchValue, searchFilter = {}, searchOptions = { limit: 10, skip: 0 }) {
+  async textSearch (model, searchValue, searchFilter = {}, searchOptions = { limit: 10, skip: 0 }) {
     let query = { ...searchFilter }
     if (searchValue) {
       query["$text"] = { $search: searchValue }
@@ -33,15 +33,16 @@ export const controllers = {
     else {
       searchOptions.sort = { updated_at: -1 }
     }
-    console.log("### searchOptions", searchOptions)
+    await model.init()
     return model.find(query, null, searchOptions)
   },
 
-  textSearchCount (model, searchValue, searchFilter = {}) {
+  async textSearchCount (model, searchValue, searchFilter = {}) {
     let query = { ...searchFilter }
     if (searchValue) {
       query["$text"] = { $search: searchValue }
     }
+    await model.init()
     return model.countDocuments(query)
   },
 
@@ -103,7 +104,6 @@ export const getAll = (model) => (req, res, next) => {
 }
 
 export const textSearch = (model) => async (req, res, next) => {
-  console.log("### text search")
   const searchValue = req.body.search
   const searchFilter = req.body.filter
   const searchOptions = req.body.options

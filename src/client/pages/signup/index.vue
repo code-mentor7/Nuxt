@@ -134,7 +134,6 @@ import tncDialog from "~/components/Dialog/TermsAndConditionsDialog.vue"
 
 const checked = withParams({ type: "checked" }, value => value === true)
 const uniqueEmail = withParams({ type: "uniqueEmail" }, value => {
-  console.log("value", value)
   return value
 })
 // const uniqueEmail = withParams({type: 'uniqueEmail'}, value => {

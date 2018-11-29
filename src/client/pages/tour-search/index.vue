@@ -300,6 +300,9 @@ export default {
       const { sortBy, descending, page, rowsPerPage } = this.pagination
 
       this.skip = rowsPerPage * (page - 1) || 0
+      if (!rowsPerPage) {
+        return ""
+      }
       if (this.skip === 0 && this.limit === rowsPerPage) {
         return ""
       }

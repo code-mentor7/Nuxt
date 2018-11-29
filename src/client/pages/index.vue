@@ -1,14 +1,14 @@
 <template>
   <section>
     <v-carousel
-      v-if="landingPage"
+      v-show="landingPage"
       hide-delimiters
       class="wrapper-slide">
       <v-carousel-item
         v-for="(item,i) in landingPage.main_carousel"
         :key="i"
         :src="item.media_id | cloudinaryImageUrl"
-        :lazy-src=" item.media_id | cloudinaryImageUrl"
+
       >
         <v-container fill-height >
           <v-layout
@@ -37,7 +37,6 @@
 
     </v-carousel>
     <v-tabs
-      v-if="landingPage"
       centered
       height="60px"
       color="blue-gradient"
@@ -350,7 +349,7 @@
             wrap
             align-center>
             <v-flex
-              v-if="!landingPage.section_text_1_disabled"
+              v-show="!landingPage.section_text_1_disabled"
               xs12
               sm4
               class="">
@@ -366,7 +365,7 @@
               </v-card>
             </v-flex>
             <v-flex
-              v-if="!landingPage.section_text_2_disabled"
+              v-show="!landingPage.section_text_2_disabled"
               xs12
               sm4
               class="">

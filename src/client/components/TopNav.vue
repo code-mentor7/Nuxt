@@ -354,15 +354,13 @@ export default {
           id: 1, value: "zh", name: "中文", code: "zh"
         }
       ],
-      showChangePass: false,
-      customerData: {
-        cart: ""
-      }
+      showChangePass: false
     }
   },
   computed: {
     ...mapState({
-      isLoggedIn: state => state.auth.loggedIn
+      isLoggedIn: state => state.auth.loggedIn,
+      customerData: state => state.auth.user
     }),
     filteredLangList () {
       return this.langList.filter(langObj => langObj.value !== this.lang.value)
