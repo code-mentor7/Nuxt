@@ -13,6 +13,10 @@ export const controllers = {
     return model.findById(id)
   },
 
+  findByQuery (model, query = {}) {
+    return model.find(query)
+  },
+
   getOne (docToGet) {
     return Promise.resolve(docToGet)
   },
@@ -29,6 +33,7 @@ export const controllers = {
     else {
       searchOptions.sort = { updated_at: -1 }
     }
+    console.log("### searchOptions", searchOptions)
     return model.find(query, null, searchOptions)
   },
 
@@ -74,6 +79,17 @@ export const findByParam = (model) => (req, res, next, id) => {
     })
 }
 
+export const findByQuery = (model) => (req, res, next) => {
+  const query = req.body.query
+  return controllers.findByQuery(model, query)
+    .then(doc => {
+      res.status(200).json(doc)
+    })
+    .catch(error => {
+      next(error)
+    })
+}
+
 export const getOne = (model) => (req, res, next) => {
   return controllers.getOne(req.docFromId)
     .then(doc => res.status(200).json(doc))
@@ -87,6 +103,7 @@ export const getAll = (model) => (req, res, next) => {
 }
 
 export const textSearch = (model) => async (req, res, next) => {
+  console.log("### text search")
   const searchValue = req.body.search
   const searchFilter = req.body.filter
   const searchOptions = req.body.options
@@ -127,6 +144,7 @@ export const generateControllers = (model, overrides = {}) => {
     createOne: createOne(model),
     deleteOne: deleteOne(model),
     findByParam: findByParam(model),
+    findByQuery: findByQuery(model),
     getAll: getAll(model),
     getOne: getOne(model),
     textSearch: textSearch(model),

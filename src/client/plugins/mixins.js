@@ -71,6 +71,9 @@ const mixins = {
       }
       return type
     },
+    // getArrayOfAPIDataAndCount (app, store, route, filter) {
+
+    // },
     getLocaleLangCode (localeValue) {
       const LOCALE_LANG = {
         en: "English",
@@ -144,4 +147,14 @@ const mixins = {
   }
 }
 
-Vue.mixin(mixins)
+const commonFunction = {
+  install (Vue, options) {
+    Vue.mixin(mixins)
+  }
+}
+
+Vue.use(commonFunction)
+// Vue.mixin(mixins)
+export default (context, inject) => {
+  inject("commonFunction", mixins.methods)
+}

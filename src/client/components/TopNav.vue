@@ -39,7 +39,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile
-          :to="{name:'Cart'}"
+          :to="{name:`cart___${$i18n.locale}`}"
           exact
         >
           <v-badge
@@ -207,7 +207,7 @@
         </v-btn>
         <v-btn
           :class="fontClass()"
-          :to="{name:'Cart'}"
+          :to="{name:`cart___${$i18n.locale}`}"
           flat
           class="font-enforce font-weight-black"
           exact

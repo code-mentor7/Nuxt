@@ -11,8 +11,8 @@ const router = Router()
 router.route("/")
   .post(controllers.textSearch)
 
-router.route("/slug/:slug")
-  .post(controllers.findByQuery)
+// router.route("/slug/:slug")
+//   .post(controllers.findByQuery)
 
 // router.route("/slug/:slug")
 //   .post(function (req, res) {

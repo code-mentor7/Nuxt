@@ -1,5 +1,6 @@
 import { Router } from "express"
 import authRoutes from "./auth/routes"
+import hotelRoutes from "./hotels/routes"
 import landingPageRoutes from "./landingPage/routes"
 import productsRoutes from "./products/routes"
 import siteIdentityRoutes from "./siteIdentity/routes"
@@ -11,6 +12,7 @@ const router = Router()
 
 router.use("/", handleServerErrors())
 router.use("/auth", authRoutes)
+router.use("/hotels", hotelRoutes)
 router.use("/landing-page", landingPageRoutes)
 router.use("/products", productsRoutes)
 router.use("/site-identity", siteIdentityRoutes)

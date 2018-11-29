@@ -1,7 +1,7 @@
 <template>
   <v-container
     fluid
-    grid-list-xl >
+    grid-list-xl>
     <v-form
       @submit.prevent="search()"
       @keyup.enter.native="search()">
@@ -17,12 +17,14 @@
           xs12
         >
           <v-text-field
-            v-model="tourData.search"
+            v-model="hotelData.search"
+            :error-messages="checkError('search', validationProps.hotelData, $v.hotelData, 'This')"
             autofocus
             append-icon="search"
-            label="Search Tour"
+            label="Search Hotel"
             name="search"
             light
+            @input="$v.hotelData.search.$touch()"
           />
         </v-flex>
         <v-flex
@@ -34,7 +36,6 @@
           <date-picker
             :label="'Travel Start Date'"
             :var-name-ref="'startDate'"
-            :initial-date="tourData.startDate"
             :min="minDate()"
             @picked="datePicked"/>
         </v-flex>
@@ -46,7 +47,6 @@
           color="transparent">
           <date-picker
             :label="'Travel End Date'"
-            :initial-date="tourData.endDate"
             :var-name-ref="'endDate'"
             :min="endMinDate()"
             @picked="datePicked"/>
@@ -72,17 +72,17 @@
         sm12
         row>
         <v-data-iterator
-          :items="localTours"
+          :items="hotels"
           :rows-per-page-items="itemPerRow"
           :pagination.sync="pagination"
-          :total-items="toursCount"
-          :hide-actions="toursCount == 0"
+          :total-items="hotelsCount"
+          :hide-actions="hotelsCount == 0"
           content-tag="v-layout"
           row
           wrap
         >
           <v-flex
-            v-show="toursCount == 0"
+            v-show=" hotelsCount == 0"
             slot="no-data"
             xs12>
             <h1
@@ -97,14 +97,13 @@
             xs12
             lg6>
             <v-card
-              :to="{name: `tour-slug___${$i18n.locale}`, params: {slug: props.item.slug}, query: setQueryParams()}"
+              :href="props.item.url | removeLeadingAndTrailingDoubleQuote"
               :hover="true"
-              class="hide-overflow"
-              ripple>
+              class="hide-overflow">
 
               <v-img
-                :lazy-src=" props.item.primary_image_id | cloudinaryImageUrl | determineImgSrc"
-                :src=" props.item.primary_image_id | cloudinaryImageUrl | determineImgSrc"
+                :lazy-src=" props.item.photo1 | determineImgSrc"
+                :src=" props.item.photo1 | determineImgSrc"
                 height="200">
                 <v-layout
                   slot="placeholder"
@@ -121,19 +120,19 @@
                 top
                 color="black"
                 nudge-bottom="30">
-                <div slot="activator">
-                  <v-card-title
-                    primary-title
-                    class="pb-1">
-                    <h3 class="headline mb-0  primary--text ellipsis ">{{ props.item.name | removeLeadingAndTrailingDoubleQuote }}</h3>
-                    <!-- <div class="overflow-hidden" style="height: 105px !important;" v-html="props.item.description"></div> -->
-                  </v-card-title>
+                <v-card-title
+                  slot="activator"
+                  primary-title
+                  style="min-height: 200px">
+                  <h3 class="headline primary--text mb-0  ellipsis">{{ props.item.hotel_name | removeLeadingAndTrailingDoubleQuote }}</h3>
                   <v-card-text
-                    class="overflow-hidden"
-                    style="height: 118px !important;"
-                    v-html="props.item.description"/>
-                </div>
-                <span>{{ props.item.name | removeLeadingAndTrailingDoubleQuote }}</span>
+                    class="py-0 overflow-hidden"
+                    style="height: 105px !important;">
+                    {{ props.item.overview | removeLeadingAndTrailingDoubleQuote }}
+                  </v-card-text>
+                  <!-- <div  class="overflow-hidden" style="height: 100px !important;">{{props.item.overview | removeLeadingAndTrailingDoubleQuote }}</div> -->
+                </v-card-title>
+                <span>{{ props.item.hotel_name | removeLeadingAndTrailingDoubleQuote }}</span>
               </v-tooltip>
 
               <v-card-actions>
@@ -141,36 +140,45 @@
                   flat
                   color="primary">Explore</v-btn>
                 <v-spacer/>
-                <span
-                  v-show="props.item.tour_addons_expiration_date"
-                  class="orange--text">
-                  Available until {{ props.item.tour_addons_expiration_date | formatDateOnly }}
-                </span>
-                <span v-if="props.item.adult_promotion_price > 0">
-                  <v-tooltip
-                    top
-                    color="black">
-                    <v-chip
-                      slot="activator"
-                      color="green"
-                      text-color="white">
-                      <v-icon
-                        left
-                        color="orange">star</v-icon>
-                      MYR {{ props.item.adult_promotion_price }}
-                    </v-chip>
-                    <span>Promotion now !</span>
-                  </v-tooltip>
-                </span>
-                <span v-else>
-                  <v-chip
-                    color="green"
-                    text-color="white">MYR {{ props.item.adult_selling_price }}</v-chip>
-                </span>
+                <v-chip
+                  color="green"
+                  text-color="white">MYR {{ props.item.rates_from | convertToMYRFromUSD }}</v-chip>
               </v-card-actions>
             </v-card>
+            <!-- <v-card raised :href="props.item.url | removeLeadingAndTrailingDoubleQuote" :hover="true">
+                        <v-layout class="hidden-sm-and-down">
+                            <v-flex xs2 class="py-0">
+                                <v-card-media
+                                    :src=" props.item.photo1 | determineImgSrc"
+                                    height="100%">
+                                </v-card-media>
+                            </v-flex>
+                            <v-flex xs10>
+                                <v-card-title primary-title>
+                                    <div class="headline primary--text">{{props.item.hotel_name | removeLeadingAndTrailingDoubleQuote}}</div>
+                                </v-card-title>
+                                <v-card-text>
+                                    <div>{{props.item.overview | truncateTextDisplay | removeLeadingAndTrailingDoubleQuote}}</div>
+                                </v-card-text>
+                            </v-flex>
+                        </v-layout>
+                        <div class="hidden-md-and-up">
+                            <v-card-media
+                                :src=" props.item.photo1 | determineImgSrc"
+                                height="100px">
+                            </v-card-media>
+                            <v-card-title primary-title class="pb-0">
+                                <h3 class="headline mb-0  primary--text  ">{{props.item.hotel_name | removeLeadingAndTrailingDoubleQuote}}</h3>
+                            </v-card-title>
+                            <v-card-text>
+                                {{props.item.overview | truncateTextDisplay | removeLeadingAndTrailingDoubleQuote}}
+                            </v-card-text>
+                        </div>
+                        <v-divider></v-divider>
+                    </v-card> -->
           </v-flex>
         </v-data-iterator>
+
       </v-flex>
     </v-layout>
   </v-container>
@@ -179,6 +187,8 @@
 <script>
 import _ from "lodash"
 import moment from "moment"
+import { required } from "vuelidate/lib/validators"
+import { validationMixin } from "vuelidate"
 import { mapState } from "vuex"
 
 import DatePicker from "~/components/DatePicker.vue"
@@ -196,7 +206,7 @@ export default {
       if (route.query.co) {
         endDate = moment.unix(route.query.co).format("YYYY-MM-DD")
       }
-      const getData = app.$axios.$post("/api/products", {
+      const getData = app.$axios.$post("/api/hotels", {
         search: searchValue,
         filter: {
           disabled: false,
@@ -205,7 +215,7 @@ export default {
           }
         }
       })
-      const getCount = app.$axios.$post("/api/products/count", {
+      const getCount = app.$axios.$post("/api/hotels/count", {
         search: searchValue,
         filter: {
           disabled: false,
@@ -219,15 +229,15 @@ export default {
         getCount
       ]
 
-      let products = []
-      let productsCount = 0
+      let hotels = []
+      let hotelsCount = 0
       await Promise.all(promiseArr)
         .then((promiseResultArray) => {
-          products = promiseResultArray[0]
-          productsCount = promiseResultArray[1]
+          hotels = promiseResultArray[0]
+          hotelsCount = promiseResultArray[1]
         })
-      app.store.dispatch("tours/setTours", products)
-      app.store.dispatch("tours/setToursCount", productsCount)
+      app.store.dispatch("hotels/setHotels", hotels)
+      app.store.dispatch("hotels/setHotelsCount", hotelsCount)
     }
     catch (err) {
       console.log("&&&", err)
@@ -237,6 +247,7 @@ export default {
   components: {
     DatePicker
   },
+  mixins: [ validationMixin ],
   data () {
     let defaultData = {
       itemPerRow: [10, 25, 50],
@@ -244,18 +255,16 @@ export default {
       skip: 0,
       query: {},
       selector: {},
-      time: new Date().getTime(),
-      totalCount: this.toursCount,
       pagination: {},
-      // pagination: {
-      //   page: 2,
-      //   descending: false,
-      //   sortBy: ""
-      // },
-      tourData: {
+      hotelData: {
         search: this.$route.query.keywords || "",
         startDate: "",
         endDate: ""
+      },
+      validationProps: {
+        hotelData: {
+          search: { required }
+        }
       }
     }
     if (this.$route.query.ci) {
@@ -268,17 +277,13 @@ export default {
   },
   computed: {
     ...mapState({
-      tours: state => state.tours.tours,
-      toursCount: state => state.tours.toursCount
-    }),
-    localTours () {
-      if (this.$i18n.locale === "en") {
-        return this.tours
-      }
-      else {
-        return this.setTranslationAsPrimary()
-      }
-    }
+      hotels: state => state.hotels.hotels,
+      hotelsCount: state => state.hotels.hotelsCount
+    })
+    // loading () {
+    //   this.setLoading(!this.$subReady.getHotelData)
+    //   return !this.$subReady.getHotelData
+    // }
   },
   watch: {
     pagination: {
@@ -287,18 +292,23 @@ export default {
       },
       deep: true
     }
+    // search (val) {
+    //   let queryObj = {}
+    //   this.searchValue = val
+    //   this.debouncedSearch()
+    // }
   },
   created () {
-    this.query = {
-      searchValue: this.$route.query.keywords
-    }
-    this.selector = { searchValue: this.$route.query.keywords }
+    // this.query = {
+    //   searchValue: this.$route.query.keywords
+    // }
+    // this.selector = { searchValue: this.$route.query.keywords }
+    // this.$subscribe("getHotelData", () => [this.query.searchValue, this.skip, this.limit])
+    // this.$subscribe("getHotelsCount", () => [this.query.searchValue])
   },
-
   methods: {
     async getDataFromApi () {
       const { sortBy, descending, page, rowsPerPage } = this.pagination
-
       this.skip = rowsPerPage * (page - 1) || 0
       if (this.skip === 0 && this.limit === rowsPerPage) {
         return ""
@@ -306,6 +316,7 @@ export default {
       this.limit = rowsPerPage || 0
       try {
         this.$nuxt.$loading.start()
+
         let startDate
         let endDate = new Date()
         let searchValue = this.$route.query.keywords
@@ -315,39 +326,36 @@ export default {
         if (this.$route.query.co) {
           endDate = moment.unix(this.$route.query.co).format("YYYY-MM-DD")
         }
-        const getData = this.$axios.$post("/api/products", {
+        const getData = this.$axios.$post("/api/hotels", {
           search: searchValue,
           filter: {
             disabled: false,
             tour_addons_expiration_date: {
               $gte: endDate
             }
-          },
-          options: {
-            skip: this.skip,
-            limit: this.limit
           }
         })
         let promiseArr = [
           getData
         ]
 
-        let products = []
+        let hotels = []
         await Promise.all(promiseArr)
           .then((promiseResultArray) => {
-            products = promiseResultArray[0]
+            hotels = promiseResultArray[0]
           })
-        this.$store.dispatch("tours/setTours", products)
+
         this.$nuxt.$loading.finish()
+        this.$store.dispatch("hotels/setHotels", hotels)
       }
       catch (err) {
-        console.log("### ", err)
+
       }
     },
     datePicked (date, varNameRef, index, id) {
-      this.tourData[`${varNameRef}`] = date
+      this.hotelData[`${varNameRef}`] = date
       if (varNameRef.indexOf("StartDate") !== -1) {
-        this.tourData.endDate = ""
+        this.hotelData.endDate = ""
       }
     },
     minDate () {
@@ -357,8 +365,8 @@ export default {
     endMinDate () {
       let date = new Date()
       date = `${date.getFullYear()}-${this.addLeadingZero(date.getMonth() + 1)}-${this.addLeadingZero(date.getDate())}`
-      if (this.tourData.startDate) {
-        let endMinDate = new Date(this.tourData.startDate)
+      if (this.hotelData.startDate) {
+        let endMinDate = new Date(this.hotelData.startDate)
 
         date = `${endMinDate.getFullYear()}-${this.addLeadingZero(endMinDate.getMonth() + 1)}-${this.addLeadingZero(endMinDate.getDate())}`
       }
@@ -366,69 +374,34 @@ export default {
       return date
     },
     search () {
-      // this.$v.$touch()
-      // if (!this.$v.invalid) {
-      const unixStartDate = this.tourData.startDate ? moment(this.tourData.startDate, "YYYY-MM-DD").format("X") : ""
-      const unixEndDate = this.tourData.endDate ? moment(this.tourData.endDate, "YYYY-MM-DD").format("X") : ""
-      let routeQuery = {
-        keywords: this.tourData.search,
-        ci: unixStartDate,
-        co: unixEndDate
-      }
-      this.$router.push({ name: `tour-search___${this.$i18n.locale}`, query: routeQuery })
-      // }
-      // else {
-      //   this.setupSnackbar({
-      //     show: true,
-      //     text: "Search keyword is required.",
-      //     type: "warning"
-      //   })
-      // }
-    },
-    setTranslationAsPrimary () {
-      let tourArr = []
-      this.tours.forEach((tour) => {
-        let searchForExisting = _.find(tour.translation, { lang: this.$i18n.locale })
-        let _tour = { ...tour }
-        _tour.name = null
-        _tour.description = null
-        _tour.location_to_be_display = null
-        _tour.highlights = null
-        _tour.includes = null
-        _tour.duration = null
-        _tour.terms_and_conditions = null
-        _tour.itinerary = []
-        _tour.tour_guide = []
-        if (searchForExisting) {
-          tourArr.push({ ..._tour, ...searchForExisting })
+      this.$v.$touch()
+      if (!this.$v.invalid) {
+        let routeQuery = {
+          keywords: this.hotelData.search,
+          ci: this.hotelData.startDate,
+          co: this.hotelData.endDate
         }
-        else {
-          tourArr.push({ ..._tour })
-        }
-      })
-      if (tourArr.length === 0) {
-        tourArr = this.tours
+        // this.$router.push({ name: "HotelSearchResult", query: routeQuery })
+        // this.query.searchValue = this.hotelData.search
+        this.$router.push({ name: `hotel-search___${this.$i18n.locale}`, query: routeQuery })
+        // this.limit = 10
+        // this.skip = 0
       }
-      return tourArr
-    },
-    setQueryParams () {
-      let query = { ci: "", co: "" }
-      if (this.tourData.startDate) {
-        query.ci = moment(this.tourData.startDate).format("X")
+      else {
+        this.$store.dispatch("setupSnackbar", {
+          show: true,
+          text: "Search keyword is required.",
+          type: "warning"
+        })
       }
-      if (this.tourData.endDate) {
-        query.co = moment(this.tourData.endDate).format("X")
-      }
-      return query
     }
+  },
+  validations () {
+    return this.validationProps
   }
-
 }
 </script>
 
 <style>
-.card-scroll {
-    overflow-y: auto;
-    overflow-x: hidden;
-}
+
 </style>
