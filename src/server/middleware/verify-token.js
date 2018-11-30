@@ -1,4 +1,4 @@
-import Customer from "../api/auth/models"
+import Customer from "../api/customers/models"
 import jwt from "jsonwebtoken"
 import moment from "moment"
 import { ServerError } from "express-server-error"

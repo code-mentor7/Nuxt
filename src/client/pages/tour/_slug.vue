@@ -483,18 +483,16 @@ export default {
   created () {
   },
   methods: {
-    addToCart () {
+    async addToCart () {
       this.showAddedQty = false
-      let msg = "Added to your cart!"
-      let type = "success"
-      if (!this.isLoggedIn) {
-        // return this.$router.push({ name: "SignIn" })
-        return this.$store.dispatch("setupSnackbar", {
-          show: true,
-          text: "We need to know who you are, please signin or signup.",
-          type: "warning"
-        })
-      }
+      // if (!this.isLoggedIn) {
+      //   // return this.$router.push({ name: "SignIn" })
+      //   return this.$store.dispatch("setupSnackbar", {
+      //     show: true,
+      //     text: "We need to know who you are, please signin or signup.",
+      //     type: "warning"
+      //   })
+      // }
       if (!this.travel_end_date || !this.travel_start_date) {
         return this.$store.dispatch("setupSnackbar", {
           show: true,
@@ -541,6 +539,13 @@ export default {
         travel_start_date: this.travel_start_date
       }
       console.log("### cartProps", cartProps)
+      try {
+        const cust = await this.$axios.$put("/api/customers", cartProps)
+      }
+      catch (err) {
+        console.log("### ", err)
+      }
+
       // Meteor.call("addItemToCart", cartProps, (err, res) => {
       //   this.isLoading = false
       //   if (err) {

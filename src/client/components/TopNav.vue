@@ -485,7 +485,7 @@ export default {
     },
     userProfileClick () {
       this.userMenu = false
-      this.$router.push({ name: "UserProfile" })
+      this.$router.push({ name: `user-profile___${this.$i18n.locale}` })
     }
   },
   i18n: {

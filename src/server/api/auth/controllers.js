@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
-import Customer from "./models"
+import Customer from "../customers/models"
 import randString from "~/util/randString"
 import { ServerError } from "express-server-error"
 import { pick as _pick, omit as _omit } from "lodash"
@@ -33,22 +33,22 @@ export const login = {
 }
 
 export const user = {
-  async get (req, res) {
-    try {
-      if (req.user._id) {
-        let cust = await Customer.findOne({ _id: req.user._id })
+  get (req, res) {
+    // try {
+    //   if (req.user._id) {
+    //     let cust = await Customer.findOne({ _id: req.user._id })
 
-        if (cust.length !== 0) res.json({ user: cust.toObject() })
-        else throw new ServerError("User not found", { status: 404, log: false })
-      }
-      else {
-        throw new ServerError("Query not supported.", { status: 400 })
-      }
-    }
-    catch (error) {
-      res.handleServerError(error)
-    }
-    // res.json({ user: req.user })
+    //     if (cust.length !== 0) res.json({ user: cust.toObject() })
+    //     else throw new ServerError("User not found", { status: 404, log: false })
+    //   }
+    //   else {
+    //     throw new ServerError("Query not supported.", { status: 400 })
+    //   }
+    // }
+    // catch (error) {
+    //   res.handleServerError(error)
+    // }
+    res.json({ user: req.user })
   }
 }
 
