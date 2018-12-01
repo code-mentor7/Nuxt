@@ -11,7 +11,7 @@
         <v-flex xs12>
           <v-card>
             <v-img
-              src="~assets/img/profile-bg.jpg"
+              :src="resolveImgAssets()"
               height="300px"
             >
               <v-layout
@@ -132,7 +132,7 @@
             <v-tab-item
               id="history"
             >
-              <purchase-history :transaction-prop="transactionData"/>
+              <!-- <purchase-history :transaction-prop="transactionData"/> -->
             </v-tab-item>
           </v-tabs>
         </v-flex>
@@ -163,7 +163,6 @@ export default {
       avatarFile: null,
       submitting: false,
       tab: ["profile", "history"],
-      userData: {},
       validationProps: {
         userData: {
           contact_number: { required },
@@ -178,14 +177,12 @@ export default {
   computed: {
     ...mapState({
       customerData: state => state.auth.user
-    })
-
+    }),
+    userData () {
+      return _.clone(this.customerData)
+    }
   },
   methods: {
-    // ...mapActions("layout", [
-    //   "setupSnackbar",
-    //   "setLoading"
-    // ]),
     avatarClick () {
       this.$refs.avatar.click()
     },

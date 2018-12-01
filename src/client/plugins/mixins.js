@@ -102,6 +102,9 @@ const mixins = {
         }
       })
     },
+    resolveImgAssets () {
+      return require("~/assets/img/profile-bg.jpg")
+    },
     uploadFile (file, callback) {
       const url = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_NAME}/upload`
       const xhr = new XMLHttpRequest()

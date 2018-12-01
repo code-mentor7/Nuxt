@@ -17,5 +17,5 @@ tour without slug redirect to 404
 check product in cart expiry 
 centralize price algo
 allow add link in main page
-translation ?
+translation backend ?
 meta tag on each page
