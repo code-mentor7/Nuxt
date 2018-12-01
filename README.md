@@ -12,3 +12,10 @@ loading: https://github.com/nuxt/nuxt.js/tree/dev/examples/custom-loading
 migrate db
 get fresh user
 incorrect html markup
+Error/404 page
+tour without slug redirect to 404
+check product in cart expiry 
+centralize price algo
+allow add link in main page
+translation ?
+meta tag on each page

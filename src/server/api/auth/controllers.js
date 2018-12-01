@@ -18,7 +18,7 @@ export const login = {
         throw new ServerError("Authentication failed. Incorrect email or password", { status: 401, log: false })
       }
       else {
-        const userObj = _omit(user.toObject(), ["password", "verification_token", "reset_password_token", "__v"])
+        const userObj = _omit(user.toObject(), ["password", "verification_token", "reset_password_token", "__v", "jti", "iat", "exp"])
         if (userObj.account_verified !== true) {
           throw new ServerError("Account not verified.", { status: 403, log: false })
         }
@@ -35,8 +35,12 @@ export const login = {
 
 export const user = {
   async get (req, res) {
+    let freshUser = req.user
     console.log("### user")
-    res.json({ user: req.user })
+    let user = await Customer.findOne({ _id: req.user._id })
+    if (user) freshUser = _omit(user.toObject(), ["password", "verification_token", "reset_password_token", "__v", "jti", "iat", "exp"])
+
+    res.json({ user: freshUser })
   }
 }
 

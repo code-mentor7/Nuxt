@@ -163,7 +163,7 @@
             <v-flex
               xs12
               class="px-3">
-              <h3 class="layout justify-center font-weight-bold display-1 font-enforce">{{ $t('landingPage.hotelMainTitle') }}</h3>
+              <h3 class="layout justify-center font-weight-black display-2">{{ $t('landingPage.hotelMainTitle') }}</h3>
               <v-subheader class="font-weight-bold headline font-enforce">
                 {{ $t(`landingPage.${landingPage.section_sub_title_1}`) }}
                 <v-divider
@@ -180,6 +180,7 @@
                 @click="hotelDestinationClick(value.title)">
                 <v-card :hover="true">
                   <v-img
+                    :lazy-src=" value.media_id | cloudinaryImageUrl | determineImgSrc"
                     :src=" value.media_id | cloudinaryImageUrl | determineImgSrc"
                     height="200px"
                     gradient="to top right, rgba(100,115,201,0), rgba(25,32,72,.7)"
@@ -193,7 +194,7 @@
                     >
                       <v-progress-circular
                         indeterminate
-                        color="grey lighten-5"/>
+                        color="primary"/>
                     </v-layout>
                     <v-layout
                       pa-2
@@ -300,7 +301,7 @@
                     >
                       <v-progress-circular
                         indeterminate
-                        color="grey lighten-5"/>
+                        color="primary"/>
                     </v-layout>
                     <v-layout
                       pa-2
@@ -528,7 +529,7 @@ export default {
       let routeQuery = {
         keywords: destination
       }
-      this.$router.push({ name: `HotelSearchResult`, query: routeQuery })
+      this.$router.push({ name: `hotel-search___${this.$i18n.locale}`, query: routeQuery })
     },
     minDate () {
       let date = new Date()

@@ -60,7 +60,8 @@ module.exports = {
       { hid: "description", name: "description", content: "Nuxt.js project" }
     ],
     link: [
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Lato:300,400,500,700|Material+Icons" }
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Lato:300,400,500,700|Material+Icons" },
+      
     ]
   },
   loading: "~/components/Loading.vue",
@@ -80,6 +81,7 @@ module.exports = {
     "@nuxtjs/auth",
     "@nuxtjs/axios",
     "@nuxtjs/component-cache",
+    "@nuxtjs/font-awesome",
     ["nuxt-i18n", {
       // Options
       seo: false,

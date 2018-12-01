@@ -407,6 +407,7 @@ export default {
       if (route.query.co) {
         endDate = moment.unix(route.query.co).format("YYYY-MM-DD")
       }
+      if (!route.params.slug) return redirect("/")
       const product = await app.$axios.$post(`/api/products/slug/${route.params.slug}`, {
         query: {
           slug: route.params.slug,
@@ -418,6 +419,7 @@ export default {
       })
       if (!product || product.length === 0) {
         // redirect to 404
+        return redirect("/")
       }
       app.store.dispatch("tours/setTour", product[0])
     }
@@ -485,14 +487,14 @@ export default {
   methods: {
     async addToCart () {
       this.showAddedQty = false
-      // if (!this.isLoggedIn) {
-      //   // return this.$router.push({ name: "SignIn" })
-      //   return this.$store.dispatch("setupSnackbar", {
-      //     show: true,
-      //     text: "We need to know who you are, please signin or signup.",
-      //     type: "warning"
-      //   })
-      // }
+      if (!this.isLoggedIn) {
+        // return this.$router.push({ name: "SignIn" })
+        return this.$store.dispatch("setupSnackbar", {
+          show: true,
+          text: "We need to know who you are, please signin or signup.",
+          type: "warning"
+        })
+      }
       if (!this.travel_end_date || !this.travel_start_date) {
         return this.$store.dispatch("setupSnackbar", {
           show: true,
@@ -515,9 +517,9 @@ export default {
         })
       }
       this.isLoading = true
-      let tourProps = _.omit(this.localTour, ["itinerary", "other_image_ids", "highlights", "description", "_id",
-        "terms_and_conditions",
-        "tour_guide", "travel_insurance_file_id", "notes", "includes", "cost", "created_at", "updated_at"])
+      // let tourProps = _.omit(this.localTour, ["itinerary", "other_image_ids", "highlights", "description", "_id",
+      //   "terms_and_conditions",
+      //   "tour_guide", "travel_insurance_file_id", "notes", "includes", "cost", "created_at", "updated_at"])
       let cartProps = {
         adult_discounted_amount: this.adult_discounted_amount,
         adult_quantity: this.adult_quantity,
@@ -538,29 +540,24 @@ export default {
         travel_end_date: this.travel_end_date,
         travel_start_date: this.travel_start_date
       }
-      console.log("### cartProps", cartProps)
       try {
-        const cust = await this.$axios.$put("/api/customers", cartProps)
+        await this.$axios.$put("/api/customers/cart", cartProps)
+        await this.$auth.fetchUser()
+        this.isLoading = false
+        return this.$store.dispatch("setupSnackbar", {
+          show: true,
+          text: `Added to your cart!`,
+          type: "success"
+        })
       }
       catch (err) {
-        console.log("### ", err)
+        this.isLoading = false
+        return this.$store.dispatch("setupSnackbar", {
+          show: true,
+          text: `Oops, we are unable to add into your cart. Please try again.`,
+          type: "error"
+        })
       }
-
-      // Meteor.call("addItemToCart", cartProps, (err, res) => {
-      //   this.isLoading = false
-      //   if (err) {
-      //     type = "error"
-      //     if (err.error && err.error == 409) {
-      //       msg = err.details
-      //     }
-      //   }
-
-      //   this.setupSnackbar({
-      //     show: true,
-      //     text: msg,
-      //     type: type
-      //   })
-      // })
     },
     adultTravelInsurancePriceCalculation () {
       let fee = 0

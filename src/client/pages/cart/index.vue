@@ -11,8 +11,10 @@
       <v-flex
         :xs8="$vuetify.breakpoint.mdAndUp"
         :xs12="$vuetify.breakpoint.smAndDown">
-        <h3 class="display-1 font-enforce font-weight-thin primary--text pb-3">
-          Shopping Cart
+        <h3
+          :class="{ 'pt-4': $vuetify.breakpoint.smAndDown}"
+          class="display-2 font-weight-black pb-3">
+          Your Cart
         </h3>
         <v-layout
           v-if="carts.length > 0"
@@ -83,18 +85,34 @@
                   xs2
                   class="py-0" >
                   <v-img
+                    :lazy-src=" item.media_id | cloudinaryImageUrl | determineImgSrc"
                     :height="'100%'"
-                    :src=" item.primary_image_id | cloudinaryImageUrl | determineImgSrc"/>
+                    :src=" item.primary_image_id | cloudinaryImageUrl | determineImgSrc">
+                    <v-layout
+                      slot="placeholder"
+                      fill-height
+                      align-center
+                      justify-center
+                      ma-0
+                    >
+                      <v-progress-circular
+                        indeterminate
+                        color="primary"/>
+                    </v-layout>
+                  </v-img>
                 </v-flex>
                 <v-flex xs9>
                   <v-card-title
                     primary-title
                     class="py-0 pb-0">
-                    <a
+                    <nuxt-link
+                      :to="{name: `tour-slug___${$i18n.locale}`, params: {slug: item.slug}}"
+                      class="headline primary--text font-weight-thin font-enforce ellipsis">{{ item.name }}</nuxt-link>
+                      <!-- <a
                       :href="`/tour/${item.slug}`"
                       class="headline primary--text font-weight-thin font-enforce ellipsis">
                       {{ item.name }}
-                    </a>
+                    </a> -->
                   </v-card-title>
                   <v-card-title class="pt-1 pb-1 ">
                     <span class=" title font-weight-thin font-enforce green--text">MYR{{ item.cart_price }}</span>
@@ -128,8 +146,8 @@
                 </v-flex>
                 <v-flex xs1>
                   <v-icon
-                    color="black"
-                    @click="removeItemFromCart(index)">close</v-icon>
+                    color="red"
+                    @click="removeItemFromCart(item.product_id._id)">close</v-icon>
                 </v-flex>
                 <v-flex
                   v-if="index + 1 < carts.length"
@@ -343,12 +361,8 @@ export default {
         let cartPrice = 0
         let discountedAmount = 0
         _cart.is_discount = false
-        // var prod = Products.findOne({ _id: _cart.product_id })
         if (_cart.product_id) {
           delete _cart.handling_fee
-          // prod = _.pick(prod, ["adult_selling_price", "adult_promotion_price", "kid_selling_price", "kid_promotion_price",
-          //   "name", "slug", "primary_image_id", "merchant_id", "sku",
-          //   "adult_travel_insurance_fee", "child_travel_insurance_fee", "handling_fee", "adult_purchase_discount", "child_purchase_discount"])
 
           _cart = { ..._cart, ..._cart.product_id }
 
@@ -379,15 +393,8 @@ export default {
     }
   },
   created () {
-    if (this.userId) {
-      this.$subscribe("getCartData", () => [])
-    }
   },
   methods: {
-    // ...mapActions("layout", [
-    //   "setupSnackbar",
-    //   "setLoading"
-    // ]),
     checkout () {
       this.isLoading = true
       // let roundOffTotalAmount = Number(Math.round(this.total_amount+'e1')+'e-1');
@@ -541,23 +548,25 @@ export default {
       }
       return attr
     },
-    removeItemFromCart (index) {
-      let currentCart = [...this.carts]
-      currentCart.splice(index, 1)
-      // Meteor.call("removeItemFromCart", currentCart, (err, res) => {
-      //   let msg = "Item removed from cart"
-      //   let type = "success"
-      //   if (err) {
-      //     console.log(err)
-      //     type = "error"
-      //     msg = "Unable to remove item from cart"
-      //   }
-      //   this.setupSnackbar({
-      //     show: true,
-      //     text: msg,
-      //     type: type
-      //   })
-      // })
+    async removeItemFromCart (productId) {
+      try {
+        await this.$axios.$delete("/api/customers/cart", { data: { product_id: productId } })
+        await this.$auth.fetchUser()
+        this.isLoading = false
+        return this.$store.dispatch("setupSnackbar", {
+          show: true,
+          text: `Item removed from cart`,
+          type: "success"
+        })
+      }
+      catch (err) {
+        this.isLoading = false
+        return this.$store.dispatch("setupSnackbar", {
+          show: true,
+          text: `Oops, we are unable to remove item from your cart. Please try again.`,
+          type: "error"
+        })
+      }
     }
   }
   // meteor: {
@@ -618,6 +627,14 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.v-icon {
+  border-radius: 50%;
+  -webkit-transition: -webkit-transform .2s ease-in-out;
+          transition:         transform .2s ease-in-out;
+}
+.v-icon:hover {
+  -webkit-transform: rotate(-90deg);
+          transform: rotate(-90deg);
+}
 </style>

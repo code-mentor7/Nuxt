@@ -7,8 +7,9 @@ const router = Router()
 
 router.use(jwt({ secret: process.env.SECRET }))
 
-router.route("/")
-  .put(controllers.updateOne)
+router.route("/cart")
+  .put(controllers.updateOneCart)
+  .delete(controllers.deleteOneCart)
 // router.put("/", jwt({ secret: process.env.SECRET }), controllers.updateOne)
 
 export default router

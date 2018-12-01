@@ -75,7 +75,7 @@
         </v-list-tile>
         <v-list-tile
           v-if="isLoggedIn"
-          :to="{name:'UserProfile'}"
+          :to="{name:`user-profile___${$i18n.locale}`}"
           exact
         >
           <v-list-tile-content>
@@ -246,7 +246,6 @@
         <v-menu
           v-if="isLoggedIn"
           v-model="userMenu"
-          :nudge-bottom="15"
           :value="false"
           :close-on-content-click="false"
           lazy

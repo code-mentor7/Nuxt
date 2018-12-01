@@ -176,8 +176,15 @@ const customerSchema = new mongoose.Schema({
 })
 
 customerSchema.pre("findOne", function () {
-  this.populate({ path: "cart.merchant_id", model: Merchants })
-  this.populate({ path: "cart.product_id", model: Products, select: "name " })
+  this.populate({
+    path: "cart.merchant_id",
+    model: Merchants,
+    select: "name _id"
+  })
+  this.populate({
+    path: "cart.product_id",
+    model: Products,
+    select: "adult_selling_price adult_promotion_price kid_selling_price kid_promotion_price name slug primary_image_id merchant_id sku adult_travel_insurance_fee child_travel_insurance_fee handling_fee adult_purchase_discount child_purchase_discount _id" })
 })
 
 customerSchema.pre("save", async function (next) {

@@ -6,7 +6,7 @@
       class="text-xs-justify"
     >
       <v-flex xs8>
-        <h1>About Us</h1>
+        <h1 class="display-2 font-weight-black">About Us</h1>
         <p>
           Come Travel Sdn Bhd is established at the prime district of Puchong in the year 1997. The company covers market all over Asia and Europe region, striving to provide the best travel package for all of its customer.
         </p>
