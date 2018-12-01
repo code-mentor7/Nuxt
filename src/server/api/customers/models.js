@@ -2,6 +2,7 @@ import mongoose from "mongoose"
 import bcrypt from "bcryptjs"
 import { ServerError } from "express-server-error"
 import Merchants from "../merchants/models"
+import Products from "../products/models"
 
 // TODO: Customer Roles
 
@@ -176,7 +177,7 @@ const customerSchema = new mongoose.Schema({
 
 customerSchema.pre("findOne", function () {
   this.populate({ path: "cart.merchant_id", model: Merchants })
-  this.populate({ path: "cart.product_id", model: "products" })
+  this.populate({ path: "cart.product_id", model: Products, select: "name " })
 })
 
 customerSchema.pre("save", async function (next) {
@@ -196,6 +197,10 @@ customerSchema.post("save", function (error, doc, next) {
 customerSchema.set("toJSON", {
   transform (doc, ret, options) {
     delete ret.password
+    delete ret.exp
+    delete ret.iat
+    delete ret.jti
+    delete ret.__v
     return ret
   }
 })
