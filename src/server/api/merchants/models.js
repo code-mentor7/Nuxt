@@ -69,9 +69,10 @@ const merchantsSchema = new mongoose.Schema({
     blackbox: true
   }
 }, {
-  timestamps: true,
-  createdAt: "created_at",
-  updatedAt: "updated_at"
+  timestamps: {
+    createdAt: "created_at",
+    updatedAt: "updated_at"
+  }
 })
 
 const Merchants = mongoose.model("Merchants", merchantsSchema, "merchants")

@@ -1,6 +1,5 @@
 ###TODO 
 Customer Roles
-Node cloudinary
 Error handling
 API whitelist
 Handle mongo connection refused

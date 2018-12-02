@@ -58,9 +58,10 @@ const landingPageSchema = new mongoose.Schema({
     optional: true
   }
 }, {
-  timestamps: true,
-  createdAt: "created_at",
-  updatedAt: "updated_at"
+  timestamps: {
+    createdAt: "created_at",
+    updatedAt: "updated_at"
+  }
 })
 
 const LandingPage = mongoose.model("LandingPage", landingPageSchema, "landing_page")

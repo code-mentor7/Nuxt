@@ -14,13 +14,6 @@ router.route("/")
 router.route("/slug/:slug")
   .post(controllers.findByQuery)
 
-// router.route("/slug/:slug")
-//   .post(function (req, res) {
-//     console.log("### controllers.findByQuery", controllers.findByQuery)
-//     console.log("### controllers.textSearch", controllers.textSearch)
-//     res.json("heyy")
-//   })
-
 router.route("/count")
   .post(controllers.textSearchCount)
 

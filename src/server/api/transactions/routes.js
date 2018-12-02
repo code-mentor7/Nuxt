@@ -4,10 +4,7 @@ import controllers from "./controllers"
 
 const router = Router()
 
-router.route("/")
-  .post(controllers.textSearch)
-
-router.route("/count")
-  .post(controllers.textSearchCount)
+router.route("/customer/:custid")
+  .post(controllers.findByQuery)
 
 export default router

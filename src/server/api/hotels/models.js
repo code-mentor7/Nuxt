@@ -44,9 +44,10 @@ const hotelsSchema = new mongoose.Schema({
   rating_average: { type: String },
   rates_currency: { type: String }
 }, {
-  timestamps: true,
-  createdAt: "created_at",
-  updatedAt: "updated_at"
+  timestamps: {
+    createdAt: "created_at",
+    updatedAt: "updated_at"
+  }
 })
 
 hotelsSchema.index({

@@ -1,6 +1,34 @@
+import { cloudinaryRemoveSingleFileWithPublicId, cloudinaryUploadSingleFileWithBuffer } from "../../common/cloudinary"
 import { generateControllers } from "../../common/query"
+import { pick as _pick } from "lodash"
 import Customer from "./models"
 import { ServerError } from "express-server-error"
+
+const updateOneById = async (req, res, next) => {
+  if (!req.params.id) throw new ServerError("Id not found.", { status: 400 })
+  let allowedSchema = _pick(req.body, ["name", "contact_number", "wechat_id"])
+
+  try {
+    if (req.file) {
+      if (req.file.mimetype.indexOf("image") !== -1 || req.file.mimetype.indexOf("pdf") !== -1) {
+        const cloudinaryImgObj = await cloudinaryUploadSingleFileWithBuffer(req.file)
+        allowedSchema.image_id = cloudinaryImgObj.public_id
+        if (req.body.old_image_id) {
+          // remove old profile pic, dont need to wait for result
+          cloudinaryRemoveSingleFileWithPublicId(req.body.old_image_id)
+            .catch()
+        }
+      }
+    }
+    const findQuery = { _id: req.params.id }
+    const updateQuery = { $set: { ...allowedSchema } }
+    await Customer.updateOne(findQuery, updateQuery)
+    res.send("done")
+  }
+  catch (err) {
+    res.handleServerError(err)
+  }
+}
 
 const updateOneCart = async (req, res, next) => {
   if (!req.user) throw new ServerError("User not found.", { status: 400 })
@@ -31,17 +59,15 @@ const updateOneCart = async (req, res, next) => {
 
 const deleteOneCart = async (req, res, next) => {
   if (!req.user) throw new ServerError("User not found.", { status: 400 })
-  console.log("### ", req.body.product_id)
 
   try {
     let updateQuery = { $pull: { cart: { product_id: req.body.product_id } } }
     let findQuery = { _id: req.user._id }
-    const qwe = await Customer.update(
+    await Customer.update(
       findQuery,
       updateQuery,
       { safe: true, multi: true }
     )
-    console.log("### ", qwe)
     res.send("done")
   }
   catch (err) {
@@ -51,5 +77,6 @@ const deleteOneCart = async (req, res, next) => {
 
 export default generateControllers(Customer, {
   deleteOneCart: deleteOneCart,
+  updateOneById: updateOneById,
   updateOneCart: updateOneCart
 })

@@ -274,6 +274,6 @@ productSchema.pre("find", function () {
   this.populate({ path: "merchant_id", model: Merchants })
 })
 
-const Product = mongoose.model("products", productSchema, "products")
+const Products = mongoose.model("products", productSchema, "products")
 
-export default Product
+export default Products

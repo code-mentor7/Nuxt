@@ -1,4 +1,4 @@
 import { generateControllers } from "../../common/query"
-import Product from "./models"
+import Products from "./models"
 
-export default generateControllers(Product)
+export default generateControllers(Products)

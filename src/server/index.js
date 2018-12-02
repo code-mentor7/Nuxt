@@ -1,4 +1,5 @@
 import { urlencoded, json } from "body-parser"
+import cloudinary from "cloudinary"
 import cookieParser from "cookie-parser"
 // import cors from 'cors'
 import express from "express"
@@ -29,6 +30,12 @@ config.dev = !(process.env.NODE_ENV === "production")
 const nuxt = new Nuxt(config)
 const PORT = process.env.PORT || 8100
 const HOST = process.env.HOST || "localhost"
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
 // Build only in dev mode
 if (config.dev) {

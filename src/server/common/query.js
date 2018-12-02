@@ -1,4 +1,5 @@
 import { merge } from "lodash"
+import { ServerError } from "express-server-error"
 
 export const controllers = {
   createOne (model, body) {
@@ -49,6 +50,10 @@ export const controllers = {
   updateOne (docToUpdate, update) {
     merge(docToUpdate, update)
     return docToUpdate.save()
+  },
+
+  updateOneById (model, findQuery, updateQuery) {
+    return model.updateOne(findQuery, updateQuery)
   }
 }
 
@@ -139,6 +144,16 @@ export const updateOne = (model) => async (req, res, next) => {
     .catch(error => next(error))
 }
 
+export const updateOneById = (model) => async (req, res, next) => {
+  if (!req.params.id) throw new ServerError("Id not found.", { status: 400 })
+  let findQuery = { _id: req.params.id }
+  let updateQuery = { $set: { ...req.body } }
+
+  return controllers.updateOneById(model, findQuery, updateQuery)
+    .then(doc => res.status(201).json(doc))
+    .catch(error => next(error))
+}
+
 export const generateControllers = (model, overrides = {}) => {
   const defaults = {
     createOne: createOne(model),
@@ -149,7 +164,8 @@ export const generateControllers = (model, overrides = {}) => {
     getOne: getOne(model),
     textSearch: textSearch(model),
     textSearchCount: textSearchCount(model),
-    updateOne: updateOne(model)
+    updateOne: updateOne(model),
+    updateOneById: updateOneById(model)
   }
 
   return { ...defaults, ...overrides }

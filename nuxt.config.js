@@ -29,8 +29,7 @@ module.exports = {
   },
   axios: {
     proxy: true,
-    baseURL: BASE_URL,
-    retry: { retries: 3 }
+    baseURL: BASE_URL
   },
   proxy: {
     "/api": BASE_URL
@@ -60,8 +59,8 @@ module.exports = {
       { hid: "description", name: "description", content: "Nuxt.js project" }
     ],
     link: [
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Lato:300,400,500,700|Material+Icons" },
-      
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Lato:300,400,500,700|Material+Icons" }
+
     ]
   },
   loading: "~/components/Loading.vue",

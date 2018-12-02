@@ -36,9 +36,9 @@ export const login = {
 export const user = {
   async get (req, res) {
     let freshUser = req.user
-    console.log("### user")
     let user = await Customer.findOne({ _id: req.user._id })
     if (user) freshUser = _omit(user.toObject(), ["password", "verification_token", "reset_password_token", "__v", "jti", "iat", "exp"])
+    req.user = freshUser
 
     res.json({ user: freshUser })
   }
@@ -193,9 +193,8 @@ export const signup = {
       // If your 'users' collection doesn't have a unique index on userName,
       // you need to wait for the index to build before you start relying on it.
       // https://github.com/Automattic/mongoose/issues/5050
-      // console.log("###############before init")
       // await Customer.init()
-      // FIXME: right now meteor relying on user id unique, need to change index to email
+      // TODO: right now meteor relying on user id unique, need to change index to email
       // let newCustomer = new Customer(allowedSchema)
       // await newCustomer.save()
       await Customer.create(allowedSchema)

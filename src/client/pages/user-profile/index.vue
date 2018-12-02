@@ -143,16 +143,27 @@
 
 <script>
 
-// import { Customers } from "/imports/collections/customers"
 import { mapState } from "vuex"
+import { validationMixin } from "vuelidate"
+import { required } from "vuelidate/lib/validators"
 
 import PurchaseHistory from "~/components/PurchaseHistory.vue"
-import { required } from "vuelidate/lib/validators"
-import { validationMixin } from "vuelidate"
-// import { Transactions } from "/imports/collections/transactions"
 
 import _ from "lodash"
 export default {
+  async asyncData ({ app, store, redirect, route }) {
+    try {
+      const trans = await app.$axios.$post(`/api/transactions/customer/${app.$auth.user._id}`, {
+        query: {
+          customer_id: app.$auth.user._id
+        }
+      })
+      app.store.dispatch("transactions/setTransactions", trans)
+    }
+    catch (err) {
+      console.log("&&&", err)
+    }
+  },
   components: {
     PurchaseHistory
   },
@@ -198,57 +209,44 @@ export default {
 
       reader.readAsDataURL(fileList[0])
     },
-    profileSubmit () {
+    async profileSubmit () {
       this.$v.$touch()
       if (!this.$v.$invalid) {
-        let uploadPromiseArr = []
         this.submitting = true
-        this.setLoading(true)
-        new Promise((resolve, reject) => {
-          if (this.avatarFile) {
-            this.uploadFile(this.avatarFile, (res) => {
-              resolve(res)
-            })
-          }
-          else {
-            resolve()
-          }
-        })
-          .then((avatarId) => {
-            let imageToBeRemoved
-            if (this.userData.image_id && this.avatarFile) {
-              imageToBeRemoved = _.clone(this.userData.image_id)
-              this.userData.image_id = avatarId
-            }
 
-            let msg = "Profile updated"
-            let type = "success"
-            // Meteor.call("customerUpdate", this.userData, (err, res) => {
-            //   this.submitting = false
-            //   this.setLoading(false)
-            //   this.setupSnackbar({
-            //     show: true,
-            //     text: msg,
-            //     type: type
-            //   })
-            //   if (err) {
-            //     msg = "We are unable to update your profile at the moment"
-            //     type = "error"
-            //   }
-            // })
-            if (imageToBeRemoved) {
-              // Meteor.call("removeCloudinaryResources", "image", imageToBeRemoved)
-            }
+        try {
+          // https://serversideup.net/uploading-files-vuejs-axios/
+          // { headers: { "Content-Type": "multipart/form-data" } }
+          let formData = new FormData()
+          formData.append("avatar", this.avatarFile)
+          formData.append("contact_number", this.userData.contact_number)
+          formData.append("name", this.userData.name)
+          formData.append("wechat_id", this.userData.wechat_id)
+          formData.append("old_image_id", this.userData.image_id)
+
+          await this.$axios.$put(`/api/customers/${this.userData._id}`, formData)
+          this.submitting = false
+          this.$store.dispatch("setupSnackbar", {
+            show: true,
+            text: "Profile updated.",
+            type: "success"
           })
-          .catch((err) => {
-            this.submitting = false
-            // this.setLoading(false)
-            // this.setupSnackbar({
-            //   show: true,
-            //   text: "We are unable to update your profile at the moment",
-            //   type: "error"
-            // })
+          this.avatarFile = null
+          await this.$auth.fetchUser()
+        }
+        catch (err) {
+          console.log("### err", err.message)
+          let msg = "We are unable to update your profile at the moment."
+          if (this.avatarFile) {
+            msg += " Please make sure your image size not exceed 1MB."
+          }
+          this.$store.dispatch("setupSnackbar", {
+            show: true,
+            text: msg,
+            type: "error"
           })
+          this.submitting = false
+        }
       }
     }
   },
