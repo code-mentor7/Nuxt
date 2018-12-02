@@ -5,7 +5,7 @@ import jwt from "express-jwt"
 var multer = require("multer")
 var upload = multer({
   limits: {
-    fileSize: 1 // 1MB
+    fileSize: 1 * 1024 * 1024 // 1MB
   }
 })
 
