@@ -11,9 +11,6 @@ const customerSchema = new mongoose.Schema({
     type: String,
     require: true
   },
-  "merchant_id": {
-    type: String
-  },
   "email": {
     type: String,
     required: true,
@@ -76,10 +73,6 @@ const customerSchema = new mongoose.Schema({
     is_tour_guide: {
       type: Boolean,
       default: false
-    },
-    merchant_id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "merchants"
     },
     product_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -176,11 +169,6 @@ const customerSchema = new mongoose.Schema({
 })
 
 customerSchema.pre("findOne", function () {
-  this.populate({
-    path: "cart.merchant_id",
-    model: Merchants,
-    select: "name _id"
-  })
   this.populate({
     path: "cart.product_id",
     model: Products,
