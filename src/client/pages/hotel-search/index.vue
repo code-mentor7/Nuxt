@@ -196,7 +196,6 @@ import DatePicker from "~/components/DatePicker.vue"
 export default {
   auth: false,
   async asyncData ({ app, store, redirect, route }) {
-    console.log("### async")
     try {
       let startDate
       let endDate = new Date()
@@ -209,21 +208,11 @@ export default {
       }
       const getData = app.$axios.$post("/api/hotels", {
         search: searchValue,
-        filter: {
-          disabled: false,
-          tour_addons_expiration_date: {
-            $gte: endDate
-          }
-        }
+        filter: {}
       })
       const getCount = app.$axios.$post("/api/hotels/count", {
         search: searchValue,
-        filter: {
-          disabled: false,
-          tour_addons_expiration_date: {
-            $gte: endDate
-          }
-        }
+        filter: {}
       })
       let promiseArr = [
         getData,
