@@ -182,26 +182,51 @@
                   <v-img
                     :lazy-src=" value.media_id | cloudinaryImageUrl | determineImgSrc"
                     :src=" value.media_id | cloudinaryImageUrl | determineImgSrc"
+                    class="white--text"
                     height="200px"
                     gradient="to top right, rgba(100,115,201,0), rgba(25,32,72,.7)"
                   >
-                    <v-layout
-                      slot="placeholder"
-                      fill-height
-                      align-center
-                      justify-center
-                      ma-0
-                    >
-                      <v-progress-circular
-                        indeterminate
-                        color="primary"/>
-                    </v-layout>
-                    <v-layout
+                    <v-container
                       pa-2
-                      row
                       fill-height
-                      class="lightbox white--text">
-                      <v-spacer/>
+                      fluid>
+                      <v-layout
+                        fill-height
+                        class="lightbox">
+                        <v-flex
+                          xs12
+                          align-end
+                          flexbox>
+                          <span class="headline white--text font-enforce font-weight-thin">{{ $t(`landingPage.${value.title}`) }}</span>
+                        </v-flex>
+                      </v-layout>
+                    </v-container>
+                  </v-img>
+                  <!-- <v-layout
+                    pa-0
+                    column
+                    fill-height
+                    class="lightbox white--text">
+                    <v-img
+                      :lazy-src=" value.media_id | cloudinaryImageUrl | determineImgSrc"
+                      :src=" value.media_id | cloudinaryImageUrl | determineImgSrc"
+                      height="200px"
+                      gradient="to top right, rgba(100,115,201,0), rgba(25,32,72,.7)"
+                    >
+                      <v-layout
+                        slot="placeholder"
+                        fill-height
+                        align-center
+                        justify-center
+                        ma-0
+                      >
+                        <v-progress-circular
+                          indeterminate
+                          color="primary"/>
+                      </v-layout>
+                    </v-img>
+
+                    <v-spacer/>
                       <v-flex shrink>
                         <div
                           class="headline white--text font-enforce font-weight-thin"
@@ -209,67 +234,11 @@
 
                       </v-flex>
 
-                    </v-layout>
-                    <!-- <v-container
-                      fill-height
-                      fluid
-                      pa-2
-                    >
-                      <v-layout
-                        fill-height
-                        row
-                        wrap>
-                        <v-flex
-                          xs12
-                          align-end
-                          flexbox>
-                          <span
-                            class="headline white--text font-enforce font-weight-thin"
-                            v-text="$t(`landingPage.${value.title}`)"/>
-                        </v-flex>
-                      </v-layout>
-                    </v-container> -->
-                  </v-img>
+                  </v-layout> -->
+
                 </v-card>
               </v-flex>
             </template>
-            <!-- <template v-for="(value, i) in landingPage.hotel_destination_1">
-              <v-flex
-                :key="`hotel_destination_1${i}`"
-                lg4
-                xs12
-                class="px-3 py-3"
-                @click="hotelDestinationClick(value.title)">
-                <v-card :hover="true">
-                  <v-img
-                    :src=" value.media_id | cloudinaryImageUrl | determineImgSrc"
-                    :lazy-src=" value.media_id | cloudinaryImageUrl | determineImgSrc"
-                    height="200px"
-                    gradient="to top right, rgba(100,115,201,0), rgba(25,32,72,.7)"
-                  >
-                    <v-container
-                      fill-height
-                      fluid
-                      pa-2
-                    >
-                      <v-layout
-                        fill-height
-                        row
-                        wrap>
-                        <v-flex
-                          xs12
-                          align-end
-                          flexbox>
-                          <span
-                            class="headline white--text font-enforce font-weight-thin"
-                            v-text="$t(`landingPage.${value.title}`)"/>
-                        </v-flex>
-                      </v-layout>
-                    </v-container>
-                  </v-img>
-                </v-card>
-              </v-flex>
-            </template> -->
             <v-flex
               xs12
               class="px-3">
@@ -288,54 +257,27 @@
                 @click="hotelDestinationClick(value.title)">
                 <v-card :hover="true">
                   <v-img
+                    :lazy-src=" value.media_id | cloudinaryImageUrl | determineImgSrc"
                     :src=" value.media_id | cloudinaryImageUrl | determineImgSrc"
+                    class="white--text"
                     height="200px"
                     gradient="to top right, rgba(100,115,201,0), rgba(25,32,72,.7)"
                   >
-                    <v-layout
-                      slot="placeholder"
-                      fill-height
-                      align-center
-                      justify-center
-                      ma-0
-                    >
-                      <v-progress-circular
-                        indeterminate
-                        color="primary"/>
-                    </v-layout>
-                    <v-layout
+                    <v-container
                       pa-2
-                      row
                       fill-height
-                      class="lightbox white--text">
-                      <v-spacer/>
-                      <v-flex shrink>
-                        <div
-                          class="headline white--text font-enforce font-weight-thin"
-                          v-text="$t(`landingPage.${value.title}`)"/>
-
-                      </v-flex>
-
-                    </v-layout>
-                    <!-- <v-container
-                      fill-height
-                      fluid
-                      pa-2
-                    >
+                      fluid>
                       <v-layout
                         fill-height
-                        row
-                        wrap>
+                        class="lightbox">
                         <v-flex
                           xs12
                           align-end
                           flexbox>
-                          <span
-                            class="headline white--text font-enforce font-weight-thin"
-                            v-text="$t(`landingPage.${value.title}`)"/>
+                          <span class="headline white--text font-enforce font-weight-thin">{{ $t(`landingPage.${value.title}`) }}</span>
                         </v-flex>
                       </v-layout>
-                    </v-container> -->
+                    </v-container>
                   </v-img>
                 </v-card>
               </v-flex>

@@ -1,7 +1,4 @@
 <template lang="html">
-  <!-- <div v-if="loading" class="loading-page">
-    <p class="infront">Loading...</p>
-  </div> -->
   <v-progress-linear
     v-show="loading"
     :indeterminate="true"

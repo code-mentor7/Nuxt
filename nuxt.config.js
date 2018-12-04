@@ -25,7 +25,17 @@ module.exports = {
           user: { url: "/api/auth/user", method: "get", propertyName: "user" }
         }
       }
-    }
+    },
+    token: {
+      prefix: "_96token."
+    },
+    cookie: {
+      prefix: "96auth."
+    },
+    localStorage: {
+      prefix: "96auth."
+    },
+    resetOnError: true
   },
   axios: {
     proxy: true,

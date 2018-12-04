@@ -316,7 +316,7 @@
       </v-toolbar-items>
     </v-toolbar>
     <!-- <v-progress-linear
-      v-show="isFullPageLoading"
+      v-if="isFullPageLoading"
       :indeterminate="true"
       class="rainbow-gradient progress-bar-top ma-0 px-0 fluid"
     /> -->
@@ -359,10 +359,13 @@ export default {
   computed: {
     ...mapState({
       isLoggedIn: state => state.auth.loggedIn,
-      customerData: state => state.auth.user
+      customer: state => state.auth.user
     }),
     filteredLangList () {
       return this.langList.filter(langObj => langObj.value !== this.lang.value)
+    },
+    customerData () {
+      return { ...this.customer, ...{ cart: [] } }
     }
   },
   watch: {
