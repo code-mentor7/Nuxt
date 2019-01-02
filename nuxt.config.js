@@ -62,11 +62,12 @@ module.exports = {
     CLOUDINARY_UPLOAD_PRESET: process.env.CLOUDINARY_UPLOAD_PRESET || ""
   },
   head: {
-    title: "Nuxt FullStack Boiler",
+    title: "96Travel",
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "description", name: "description", content: "Nuxt.js project" }
+      { hid: "description", name: "description", content: "Affordable and cheap hotels booking, up to 80% off ! Come Travel provides you with the BEST PRICE and BOOST your whole travel experience." },
+      { hid: "keywords", name: "keywords", content: "96travel, travel, hotel, booking, cheap, tour" }
     ],
     link: [
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Lato:300,400,500,700|Material+Icons" }
@@ -82,7 +83,7 @@ module.exports = {
   //   // css: false
   // },
   manifest: {
-    name: "vueniverse",
+    name: "96Travel",
     description: "A Vueniverse project",
     theme_color: "#188269"
   },
@@ -93,12 +94,14 @@ module.exports = {
     "@nuxtjs/font-awesome",
     ["nuxt-i18n", {
       // Options
+      vueI18nLoader: false,
       seo: false,
       locales: [
         { code: "en", iso: "en-US", name: "English" },
         { code: "zh", iso: "zh-CN", name: "中文" }
       ],
-      defaultLocale: "en",
+      defaultLocale: null,
+      strategy: "prefix_and_default",
       routes: {
         // about: {
         //   zh: "/a-propos",
@@ -134,7 +137,7 @@ module.exports = {
     }
   },
   router: {
-    middleware: ["auth"]
+    middleware: ["auth", "locale-redirect"]
   },
   srcDir: path.resolve(__dirname, "src", "client")
 }

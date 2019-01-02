@@ -344,16 +344,34 @@ export default {
   },
   head () {
     return {
-      title: "Home Page Meta Title",
+      title: "96Travel",
       meta: [
         {
-          name: "viewport",
-          content: "width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no"
+
+          name: "og:title",
+          content: "96Travel"
         },
         {
-          name: "og:title",
-          content: "OG Title"
+
+          name: "og:description",
+          content: "Affordable and cheap hotels booking, up to 80% off ! Come Travel provides you with the BEST PRICE and BOOST your whole travel experience."
+        },
+        {
+
+          name: "og:type",
+          content: "website"
+        },
+        {
+
+          name: "og:url",
+          content: `http://localhost:9100${this.$route.fullPath}`
+        },
+        {
+
+          name: "og:image",
+          content: "http://www.imoney.my/img/imoney-malaysia-logo.png"
         }
+
       ]
     }
   },
