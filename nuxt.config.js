@@ -84,7 +84,7 @@ module.exports = {
   // },
   manifest: {
     name: "96Travel",
-    description: "A Vueniverse project",
+    description: "Affordable and cheap hotels booking, up to 80% off ! Come Travel provides you with the BEST PRICE and BOOST your whole travel experience.",
     theme_color: "#188269"
   },
   modules: [

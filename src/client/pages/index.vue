@@ -362,14 +362,8 @@ export default {
           content: "website"
         },
         {
-
-          name: "og:url",
-          content: `http://localhost:9100${this.$route.fullPath}`
-        },
-        {
-
           name: "og:image",
-          content: "http://www.imoney.my/img/imoney-malaysia-logo.png"
+          content: "https://res.cloudinary.com/travel96/image/upload/ztmtigtqenwxhh1imu4i"
         }
 
       ]
