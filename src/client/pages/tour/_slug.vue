@@ -510,14 +510,14 @@ export default {
           type: "error"
         })
       }
-      if (this.totalAddedQuantity() < this.tour.min_pax && this.isNumeric(this.tour.min_pax)) {
+      if (this.totalAddedQuantity() < this.tour.min_pax && this.$helpers.isNumeric(this.tour.min_pax)) {
         return this.$store.dispatch("setupSnackbar", {
           show: true,
           text: `This tour only allow order of minimum ${this.tour.min_pax} pax.`,
           type: "error"
         })
       }
-      else if (this.totalAddedQuantity() > this.tour.max_pax && this.isNumeric(this.tour.max_pax)) {
+      else if (this.totalAddedQuantity() > this.tour.max_pax && this.$helpers.isNumeric(this.tour.max_pax)) {
         return this.$store.dispatch("setupSnackbar", {
           show: true,
           text: `This tour only allow order of maximum ${this.tour.max_pax} pax.`,
@@ -617,18 +617,18 @@ export default {
     },
     endMinDate () {
       let date = new Date()
-      date = `${date.getFullYear()}-${this.addLeadingZero(date.getMonth() + 1)}-${this.addLeadingZero(date.getDate())}`
+      date = `${date.getFullYear()}-${this.$helpers.addLeadingZero(date.getMonth() + 1)}-${this.$helpers.addLeadingZero(date.getDate())}`
       if (this.$data[`travel_start_date`]) {
         let endMinDate = new Date(this.$data[`travel_start_date`])
 
-        date = `${endMinDate.getFullYear()}-${this.addLeadingZero(endMinDate.getMonth() + 1)}-${this.addLeadingZero(endMinDate.getDate())}`
+        date = `${endMinDate.getFullYear()}-${this.$helpers.addLeadingZero(endMinDate.getMonth() + 1)}-${this.$helpers.addLeadingZero(endMinDate.getDate())}`
       }
 
       return date
     },
     minDate () {
       let date = new Date()
-      return `${date.getFullYear()}-${this.addLeadingZero(date.getMonth() + 1)}-${this.addLeadingZero(date.getDate())}`
+      return `${date.getFullYear()}-${this.$helpers.addLeadingZero(date.getMonth() + 1)}-${this.$helpers.addLeadingZero(date.getDate())}`
     },
     mergeImages () {
       let imgs = [{ image_id: this.tour.primary_image_id }, ...this.tour.other_image_ids]

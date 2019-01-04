@@ -2,7 +2,7 @@ const path = require("path")
 
 require("dotenv").config({
   silent: true,
-  path: process.env.NODE_ENV === "production" ? ".prod.env" : ".dev.env"
+  path: ".env"
 })
 
 const PORT = process.env.PORT || 8100

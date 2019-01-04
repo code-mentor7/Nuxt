@@ -1,3 +1,10 @@
+### Get Started
+1.  git clone
+2.  Run ```npm install```
+3.  Create new .env file, based on .env.sample
+4.  Run ```npm run dev```  
+
+
 ###TODO 
 * Error handling
 * API whitelist

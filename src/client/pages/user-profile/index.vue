@@ -11,7 +11,7 @@
         <v-flex xs12>
           <v-card>
             <v-img
-              :src="resolveImgAssets()"
+              :src="$helpers.resolveImgAssets()"
               height="300px"
             >
               <v-layout
@@ -92,7 +92,7 @@
                       <v-flex xs12 >
                         <v-text-field
                           v-model.trim="userData.name"
-                          :error-messages="checkError('name', validationProps.userData, $v.userData)"
+                          :error-messages="$helpers.checkError('name', validationProps.userData, $v.userData)"
                           name="name"
                           label="Name"
                           type="text"
@@ -105,14 +105,14 @@
                           type="text"/>
                         <v-text-field
                           v-model.trim="userData.wechat_id"
-                          :error-messages="checkError('wechat_id', validationProps.userData, $v.userData)"
+                          :error-messages="$helpers.checkError('wechat_id', validationProps.userData, $v.userData)"
                           name="wechat_id"
                           label="Wechat ID"
                           type="text"
                           @input="$v.userData.wechat_id.$touch()"/>
                         <v-text-field
                           v-model.trim="userData.contact_number"
-                          :error-messages="checkError('contact_number', validationProps.userData, $v.userData, 'Contact Number')"
+                          :error-messages="$helpers.checkError('contact_number', validationProps.userData, $v.userData, 'Contact Number')"
                           name="contact_number"
                           label="Contact Number"
                           type="number"

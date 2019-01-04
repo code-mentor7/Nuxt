@@ -38,7 +38,7 @@
               />
               <v-text-field
                 v-model.trim="name"
-                :error-messages="checkError('name', validationProps, $v, 'Your Name')"
+                :error-messages="$helpers.checkError('name', validationProps, $v, 'Your Name')"
                 prepend-icon="person"
                 name="name"
                 label="Your Name"
@@ -47,7 +47,7 @@
               />
               <v-text-field
                 v-model.trim="mobile_number"
-                :error-messages="checkError('mobile_number', validationProps, $v, 'Mobile Number')"
+                :error-messages="$helpers.checkError('mobile_number', validationProps, $v, 'Mobile Number')"
                 prepend-icon="phone"
                 name="mobile_number"
                 label="Mobile Number"
@@ -56,7 +56,7 @@
               />
               <v-text-field
                 v-model.trim="wechat_id"
-                :error-messages="checkError('wechat_id', validationProps, $v, 'Wechat ID')"
+                :error-messages="$helpers.checkError('wechat_id', validationProps, $v, 'Wechat ID')"
                 prepend-icon="fa fa-wechat"
                 name="wechat_id"
                 label="Wechat ID"
@@ -65,7 +65,7 @@
               />
               <v-text-field
                 v-model="password"
-                :error-messages="checkError('password', validationProps, $v)"
+                :error-messages="$helpers.checkError('password', validationProps, $v)"
                 :append-icon="showPassword ? 'visibility_off' : 'visibility'"
                 :type="showPassword ? 'text' : 'password'"
                 prepend-icon="lock"
@@ -77,7 +77,7 @@
               />
               <v-text-field
                 v-model="confirm_password"
-                :error-messages="checkError('confirm_password', validationProps, $v, 'Password')"
+                :error-messages="$helpers.checkError('confirm_password', validationProps, $v, 'Password')"
                 :append-icon="showConfirmPassword ? 'visibility_off' : 'visibility'"
                 :type="showConfirmPassword ? 'text' : 'password'"
                 prepend-icon="lock"
@@ -89,7 +89,7 @@
               />
               <v-checkbox
                 v-model="tnc"
-                :error-messages="checkError('tnc', validationProps, $v, 'This')"
+                :error-messages="$helpers.checkError('tnc', validationProps, $v, 'This')"
                 color="primary"
                 @change="$v.tnc.$touch()"
               >
@@ -204,7 +204,7 @@ export default {
       baseUrl: state => state.baseUrl
     }),
     emailErrors () {
-      const err = this.checkError("email", this.validationProps, this.$v)
+      const err = this.$helpers.checkError("email", this.validationProps, this.$v)
       return [...err]
       // return [...err, ...this.isEmailExist]
     }
@@ -225,7 +225,7 @@ export default {
           contact_number: this.mobile_number,
           wechat_id: this.wechat_id
         }
-        this.removeEmptyObjectVariable(attr) // Remove empty value prior to create
+        this.$helpers.removeEmptyObjectVariable(attr) // Remove empty value prior to create
         let msg = "Account created. We have sent you an email for verification."
         let type = "success"
         this.$axios.$post("/api/auth/signup", attr)
