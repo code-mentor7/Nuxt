@@ -66,7 +66,6 @@ module.exports = {
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "description", name: "description", content: "Affordable and cheap hotels booking, up to 80% off ! Come Travel provides you with the BEST PRICE and BOOST your whole travel experience." },
       { hid: "keywords", name: "keywords", content: "96travel, travel, hotel, booking, cheap, tour" }
     ],
     link: [

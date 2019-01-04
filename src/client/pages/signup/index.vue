@@ -131,6 +131,7 @@ import { withParams } from "vuelidate/lib/validators/common"
 import { validationMixin } from "vuelidate"
 import { debounce } from "lodash"
 import tncDialog from "~/components/Dialog/TermsAndConditionsDialog.vue"
+import { mapState } from "vuex"
 
 const checked = withParams({ type: "checked" }, value => value === true)
 const uniqueEmail = withParams({ type: "uniqueEmail" }, value => {
@@ -149,6 +150,9 @@ const uniqueEmail = withParams({ type: "uniqueEmail" }, value => {
 
 export default {
   auth: false,
+  head () {
+    return this.$helpers.setMetaSEOHead("Sign Up", null, "Sign Up", "Sign Up", this.baseUrl)
+  },
   layout: "noFooterTransparentNav",
   middleware: ["guest-only"],
   components: {
@@ -196,6 +200,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      baseUrl: state => state.baseUrl
+    }),
     emailErrors () {
       const err = this.checkError("email", this.validationProps, this.$v)
       return [...err]

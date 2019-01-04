@@ -103,7 +103,7 @@
                       :href="`#${value.code}`"
                       :id="value"
                       :key="i">
-                      {{ capitalize(value.name) }}
+                      {{ $helpers.capitalize(value.name) }}
                     </v-tab>
                     <v-tab-item
                       v-for="(value, i) in tab"
@@ -135,7 +135,7 @@
                       :href="`#${value.title}`"
                       :id="value"
                       :key="i">
-                      {{ capitalize(value.title) }}
+                      {{ $helpers.capitalize(value.title) }}
                     </v-tab>
                     <v-tab-item
                       v-for="(value, i) in localTour.itinerary"
@@ -422,12 +422,19 @@ export default {
         return redirect("/")
       }
       app.store.dispatch("tours/setTour", product[0])
+      return {
+        tourName: product[0].name,
+        tourImage: `https://res.cloudinary.com/${process.env.CLOUDINARY_NAME}/image/upload/${product[0].primary_image_id}`
+      }
     }
     catch (err) {
       console.log("&&&", err)
     }
   },
   auth: false,
+  head () {
+    return this.$helpers.setMetaSEOHead(this.tourName, this.tourName, this.tourName, this.tourName, this.baseUrl, "tour", this.tourImage)
+  },
   components: {
     DatePicker,
     TourCartInputControl
@@ -470,6 +477,7 @@ export default {
   },
   computed: {
     ...mapState({
+      baseUrl: state => state.baseUrl,
       isLoggedIn: state => state.auth.loggedIn,
       tour: state => state.tours.tour
     }),

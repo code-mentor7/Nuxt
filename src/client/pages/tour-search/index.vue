@@ -185,6 +185,13 @@ import DatePicker from "~/components/DatePicker.vue"
 
 export default {
   auth: false,
+  head () {
+    return this.$helpers.setMetaSEOHead(
+      `${this.$route.query.keywords} - Tours at 96Travel`,
+      `Search for ${this.$route.query.keywords}`,
+      this.$route.query.keywords,
+      `Search for ${this.$route.query.keywords}`, this.baseUrl)
+  },
   async asyncData ({ app, store, redirect, route }) {
     try {
       let startDate
@@ -268,6 +275,7 @@ export default {
   },
   computed: {
     ...mapState({
+      baseUrl: state => state.baseUrl,
       tours: state => state.tours.tours,
       toursCount: state => state.tours.toursCount
     }),
