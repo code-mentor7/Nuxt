@@ -6,7 +6,7 @@ import { ServerError } from "express-server-error"
 
 const updateOneById = async (req, res, next) => {
   if (!req.params.id) throw new ServerError("Id not found.", { status: 400 })
-  let allowedSchema = _pick(req.body, ["name", "contact_number", "wechat_id"])
+  let allowedSchema = _pick(req.body, ["name", "contact_number", "wechat_id", "localeLang"])
 
   try {
     if (req.file) {

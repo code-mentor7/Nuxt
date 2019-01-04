@@ -102,11 +102,12 @@
           :value="false"
         >
           <v-list-tile slot="activator">
-            <v-list-tile-title>{{ lang.code }}</v-list-tile-title>
+            <v-list-tile-title>{{ localeLang }}</v-list-tile-title>
           </v-list-tile>
           <v-list-tile
             v-for="(item, i) in filteredLangList"
             :key="i"
+            :to="switchLocalePath(item.value)"
             @click="onChangeLang(item.value)"
           >
             <v-list-tile-title>
@@ -152,13 +153,14 @@
             class="font-enforce font-weight-black"
           >
             <!-- <span class="flag-icon" :class="[`flag-icon-${lang.code}`]"></span> -->
-            {{ lang.code }}
+            {{ localeLang }}
           </v-btn>
 
           <v-list>
             <v-list-tile
               v-for="(item, i) in filteredLangList"
               :key="i"
+              :to="switchLocalePath(item.value)"
               @click="onChangeLang(item.value)"
             >
               <v-list-tile-title>
@@ -324,8 +326,9 @@
 </template>
 
 <script>
-import { mapState } from "vuex"
+import { mapActions, mapState } from "vuex"
 import ChangePasswordDialog from "~/components/Dialog/ChangePasswordDialog.vue"
+import _ from "lodash"
 
 export default {
   components: {
@@ -359,10 +362,11 @@ export default {
   computed: {
     ...mapState({
       isLoggedIn: state => state.auth.loggedIn,
-      customer: state => state.auth.user
+      customer: state => state.auth.user,
+      localeLang: state => state.localeLang
     }),
     filteredLangList () {
-      return this.langList.filter(langObj => langObj.value !== this.lang.value)
+      return this.langList.filter(langObj => langObj.value !== this.localeLang)
     },
     customerData () {
       return { ...this.customer, ...{ cart: [] } }
@@ -375,9 +379,7 @@ export default {
     }
   },
   mounted () {
-    console.log("user", this.$auth.user)
-    console.log("this.$i18n", this.$i18n.locales, this.$i18n.locale, this.$i18n)
-    console.log("switchLocalePath(locale.code)", this.switchLocalePath("zh"), this.$router.options.routes, process.env.CLOUDINARY_UPLOAD_PRESET)
+    this.debouncedAction = _.debounce(this.updateUser, 2000)
     if (this.customerData) {
       if (typeof this.customerData.localeLang !== "undefined") {
         this.setLang(this.customerData.localeLang)
@@ -385,11 +387,9 @@ export default {
     }
   },
   methods: {
-    // ...mapActions("layout", [
-    //   "setFullPageLoading",
-    //   "setLocaleLang",
-    //   "setupSnackbar",
-    // ]),
+    ...mapActions([
+      "setLocaleLang"
+    ]),
     checkPathForFont () {
       return (
         this.$route.path !== "/" &&
@@ -457,6 +457,7 @@ export default {
     onChangeLang (langValue) {
       // this.$store.dispatch('', langValue)
       this.setLang(langValue)
+      this.debouncedAction()
       // if (this.userId) {
       //   Meteor.call("customerUpdate", { localeLang: this.lang.value });
       // }
@@ -466,13 +467,13 @@ export default {
       this.offsetTop = window.pageYOffset || document.documentElement.scrollTop
     },
     setLang (langValue) {
-      this.lang = {
-        value: langValue,
-        code: this.getLocaleLangCode(langValue)
-      }
+      // this.lang = {
+      //   value: langValue,
+      //   code: this.getLocaleLangCode(langValue)
+      // }
       // this.setLocaleLang(this.lang);
-      this.$store.dispatch("setLocaleLang", this.lang)
-      this.$i18n.locale = this.lang.value
+      this.setLocaleLang(langValue)
+      this.$store.commit("i18n/I18N_SET_LOCALE", langValue)
     },
     toHome () {
       this.$router.push({ name: `index___${this.$i18n.locale}` })
@@ -484,6 +485,14 @@ export default {
       }
 
       return toolbarClass
+    },
+    async updateUser () {
+      if (this.customer) {
+        let formData = new FormData()
+        formData.append("localeLang", this.localeLang)
+        await this.$axios.$put(`/api/customers/${this.customer._id}`, formData)
+        await this.$auth.fetchUser()
+      }
     },
     userProfileClick () {
       this.userMenu = false

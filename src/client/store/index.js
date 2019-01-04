@@ -5,7 +5,7 @@ export const state = () => {
     isDarkTheme: true,
     isFullPageLoading: false,
     isSnackbar: false,
-    localeLang: { value: "en", name: "English", code: "en" },
+    localeLang: "en",
     resetPasswordStatus: false,
     showSideBar: false,
     snackBarText: "",
@@ -59,6 +59,10 @@ export const actions = {
         await commit("api/SET_LANDING_PAGE", promiseResultArray[0][0])
         await commit("api/SET_SITE_IDENTITY", promiseResultArray[1][0])
       })
+    if (app.$auth.user) {
+      await commit("SET_LOCALE_LANG", app.$auth.user.localeLang)
+      await commit("i18n/I18N_SET_LOCALE", app.$auth.user.localeLang)
+    }
   },
   showSideBar ({ commit }, value) {
     commit("SHOW_SIDE_BAR", value)
