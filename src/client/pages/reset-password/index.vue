@@ -23,7 +23,7 @@
           <v-form @submit.prevent="resetPass">
             <v-card-text>
               <v-text-field
-                :error-messages="checkError('password', validationProps, $v)"
+                :error-messages="$helpers.checkError('password', validationProps, $v)"
                 v-model="password"
                 :append-icon="showPassword ? 'visibility_off' : 'visibility'"
                 :type="showPassword ? 'text' : 'password'"
@@ -36,7 +36,7 @@
                 @click:append="showPassword = !showPassword"
               />
               <v-text-field
-                :error-messages="checkError('confirm_password', validationProps, $v, 'Password')"
+                :error-messages="$helpers.checkError('confirm_password', validationProps, $v, 'Password')"
                 v-model="confirm_password"
                 :append-icon="showConfirmPassword ? 'visibility_off' : 'visibility'"
                 :type="showConfirmPassword ? 'text' : 'password'"

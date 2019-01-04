@@ -32,7 +32,43 @@
 </template>
 
 <script>
+import { mapState } from "vuex"
 export default {
-  auth: false
+  auth: false,
+  head () {
+    return this.$helpers.setMetaSEOHead("About Us", null, "About Us", "About Us")
+    // return {
+    //   title: "About Us",
+    //   meta: [
+    //     {
+    //       name: "og:title",
+    //       content: "About Us"
+    //     },
+    //     {
+
+    //       name: "og:description",
+    //       content: "About Us"
+    //     },
+    //     {
+    //       name: "og:url",
+    //       content: this.baseUrl
+    //     },
+    //     {
+    //       name: "og:type",
+    //       content: "website"
+    //     },
+    //     {
+    //       name: "og:image",
+    //       content: "https://res.cloudinary.com/travel96/image/upload/ztmtigtqenwxhh1imu4i"
+    //     }
+
+    //   ]
+    // }
+  },
+  computed: {
+    ...mapState({
+      baseUrl: state => state.baseUrl
+    })
+  }
 }
 </script>

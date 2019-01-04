@@ -1,6 +1,7 @@
 
 export const state = () => {
   return {
+    baseUrl: "",
     inactive: false,
     isDarkTheme: true,
     isFullPageLoading: false,
@@ -15,6 +16,9 @@ export const state = () => {
 }
 
 export const mutations = {
+  SET_BASE_URL (state, value) {
+    state.baseUrl = value
+  },
   SET_FULL_PAGE_LOADING (state, value) {
     state.isFullPageLoading = value
   },
@@ -47,9 +51,10 @@ export const mutations = {
   }
 }
 export const actions = {
-  async nuxtServerInit ({ commit }, { app }) {
+  async nuxtServerInit ({ commit }, { app, route }) {
     // const ip = await app.$axios.$get('http://icanhazip.com')
     // commit('SET_IP', ip)
+    commit("SET_BASE_URL", `${app.context.req.protocol}://${app.context.req.headers.host}${route.fullPath}`)
     let promiseArr = [
       app.$axios.$get("/api/landing-page"),
       app.$axios.$get("/api/site-identity")
@@ -66,6 +71,9 @@ export const actions = {
   },
   showSideBar ({ commit }, value) {
     commit("SHOW_SIDE_BAR", value)
+  },
+  setBaseUrl ({ commit }, value) {
+    commit("SET_BASE_URL", value)
   },
   setInactive ({ commit }, value) {
     commit("SET_INACTIVE", value)

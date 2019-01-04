@@ -29,7 +29,7 @@
             <v-card-text>
               <v-text-field
                 v-model.trim="email"
-                :error-messages="checkError('email', validationProps, $v)"
+                :error-messages="$helpers.checkError('email', validationProps, $v)"
                 prepend-icon="person"
                 name="email"
                 label="Email"
@@ -38,7 +38,7 @@
               />
               <v-text-field
                 v-model="password"
-                :error-messages="checkError('password', validationProps, $v)"
+                :error-messages="$helpers.checkError('password', validationProps, $v)"
                 :append-icon="showPassword ? 'visibility_off' : 'visibility'"
                 :type="showPassword ? 'text' : 'password'"
                 prepend-icon="lock"
@@ -101,9 +101,39 @@ import {
   email
 } from "vuelidate/lib/validators"
 import { validationMixin } from "vuelidate"
+import { mapState } from "vuex"
 
 export default {
   auth: false,
+  head () {
+    return {
+      title: "Sign In",
+      meta: [
+        {
+          name: "og:title",
+          content: "Sign In"
+        },
+        {
+
+          name: "og:description",
+          content: "Sign In"
+        },
+        {
+          name: "og:url",
+          content: this.baseUrl
+        },
+        {
+          name: "og:type",
+          content: "website"
+        },
+        {
+          name: "og:image",
+          content: "https://res.cloudinary.com/travel96/image/upload/ztmtigtqenwxhh1imu4i"
+        }
+
+      ]
+    }
+  },
   layout: "noFooterTransparentNav",
   middleware: ["guest-only"],
   mixins: [ validationMixin ],
@@ -127,6 +157,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      baseUrl: state => state.baseUrl
+    })
   },
   mounted () {
     if (this.inactive) {

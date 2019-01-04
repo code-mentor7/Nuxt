@@ -18,7 +18,7 @@
         >
           <v-text-field
             v-model="hotelData.search"
-            :error-messages="checkError('search', validationProps.hotelData, $v.hotelData, 'This')"
+            :error-messages="$helpers.checkError('search', validationProps.hotelData, $v.hotelData, 'This')"
             autofocus
             append-icon="search"
             label="Search Hotel"
@@ -354,15 +354,15 @@ export default {
     },
     minDate () {
       let date = new Date()
-      return `${date.getFullYear()}-${this.addLeadingZero(date.getMonth() + 1)}-${this.addLeadingZero(date.getDate())}`
+      return `${date.getFullYear()}-${this.$helpers.addLeadingZero(date.getMonth() + 1)}-${this.$helpers.addLeadingZero(date.getDate())}`
     },
     endMinDate () {
       let date = new Date()
-      date = `${date.getFullYear()}-${this.addLeadingZero(date.getMonth() + 1)}-${this.addLeadingZero(date.getDate())}`
+      date = `${date.getFullYear()}-${this.$helpers.addLeadingZero(date.getMonth() + 1)}-${this.$helpers.addLeadingZero(date.getDate())}`
       if (this.hotelData.startDate) {
         let endMinDate = new Date(this.hotelData.startDate)
 
-        date = `${endMinDate.getFullYear()}-${this.addLeadingZero(endMinDate.getMonth() + 1)}-${this.addLeadingZero(endMinDate.getDate())}`
+        date = `${endMinDate.getFullYear()}-${this.$helpers.addLeadingZero(endMinDate.getMonth() + 1)}-${this.$helpers.addLeadingZero(endMinDate.getDate())}`
       }
 
       return date

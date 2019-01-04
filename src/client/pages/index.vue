@@ -347,7 +347,6 @@ export default {
       title: "96Travel",
       meta: [
         {
-
           name: "og:title",
           content: "96Travel"
         },
@@ -357,7 +356,10 @@ export default {
           content: "Affordable and cheap hotels booking, up to 80% off ! Come Travel provides you with the BEST PRICE and BOOST your whole travel experience."
         },
         {
-
+          name: "og:url",
+          content: this.baseUrl
+        },
+        {
           name: "og:type",
           content: "website"
         },
@@ -440,6 +442,7 @@ export default {
   },
   computed: {
     ...mapState({
+      baseUrl: state => state.baseUrl,
       landingPage: state => state.api.landingPage
     })
   },
@@ -487,15 +490,15 @@ export default {
     },
     minDate () {
       let date = new Date()
-      return `${date.getFullYear()}-${this.addLeadingZero(date.getMonth() + 1)}-${this.addLeadingZero(date.getDate())}`
+      return `${date.getFullYear()}-${this.$helpers.addLeadingZero(date.getMonth() + 1)}-${this.$helpers.addLeadingZero(date.getDate())}`
     },
     endMinDate (type) {
       let date = new Date()
-      date = `${date.getFullYear()}-${this.addLeadingZero(date.getMonth() + 1)}-${this.addLeadingZero(date.getDate())}`
+      date = `${date.getFullYear()}-${this.$helpers.addLeadingZero(date.getMonth() + 1)}-${this.$helpers.addLeadingZero(date.getDate())}`
       if (this.homeData[`${type}StartDate`]) {
         let endMinDate = new Date(this.homeData[`${type}StartDate`])
 
-        date = `${endMinDate.getFullYear()}-${this.addLeadingZero(endMinDate.getMonth() + 1)}-${this.addLeadingZero(endMinDate.getDate())}`
+        date = `${endMinDate.getFullYear()}-${this.$helpers.addLeadingZero(endMinDate.getMonth() + 1)}-${this.$helpers.addLeadingZero(endMinDate.getDate())}`
       }
 
       return date
