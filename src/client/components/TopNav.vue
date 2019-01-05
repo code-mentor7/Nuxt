@@ -22,10 +22,21 @@
           size="50px"
           exact
         >
-          <v-list-tile-avatar>
+          <v-list-tile-content v-if="siteIdentity.nav_logo_id">
+            <v-avatar
+              size="256"
+            >
+              <v-img
+                :src="siteIdentity.nav_logo_id | cloudinaryImageUrl"
+                contain
+                height="50"
+                width="0"/>
+            </v-avatar>
+          </v-list-tile-content>
+          <v-list-tile-avatar v-if="!siteIdentity.nav_logo_id">
             <span class="white--text">96</span>
           </v-list-tile-avatar>
-          <v-list-tile-content>
+          <v-list-tile-content v-if="!siteIdentity.nav_logo_id">
             <v-list-tile-title class="white--text">{{ $t('landingPage.home') }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
@@ -131,7 +142,24 @@
         class="hidden-md-and-up"
         @click="sideBarModel = !sideBarModel"
       />
-      <v-toolbar-items class="hidden-sm-and-down ml-0 pl-3 align-center">
+      <v-toolbar-title
+        v-if="siteIdentity.nav_logo_id"
+        class="hidden-sm-and-down"
+        @click="toHome">
+        <v-avatar
+          tile
+          size="256"
+        >
+          <v-img
+            :src="siteIdentity.nav_logo_id | cloudinaryImageUrl"
+            contain
+            height="50"
+            width="0"/>
+        </v-avatar>
+      </v-toolbar-title>
+      <v-toolbar-items
+        v-if="!siteIdentity.nav_logo_id"
+        class="hidden-sm-and-down ml-0 pl-3 align-center">
         <v-btn
           :class="fontClass()"
           flat
@@ -316,8 +344,8 @@
                 </v-avatar>
             </v-btn> -->
       </v-toolbar-items>
-    </v-toolbar>
-    <!-- <v-progress-linear
+    </v-img></v-toolbar>
+  <!-- <v-progress-linear
       v-if="isFullPageLoading"
       :indeterminate="true"
       class="rainbow-gradient progress-bar-top ma-0 px-0 fluid"
@@ -363,6 +391,7 @@ export default {
     ...mapState({
       isLoggedIn: state => state.auth.loggedIn,
       customer: state => state.auth.user,
+      siteIdentity: state => state.api.siteIdentity,
       localeLang: state => state.localeLang
     }),
     filteredLangList () {

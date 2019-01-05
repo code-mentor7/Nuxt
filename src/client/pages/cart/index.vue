@@ -338,6 +338,14 @@ import { mapState } from "vuex"
 // import { Products } from "/imports/collections/products"
 
 export default {
+  // auth: false,
+  // beforeRouteEnter  (to, from, next) {
+  //   next(vm => {
+  //     if (!vm.$auth.user) {
+  //       vm.$router.push({ name: `signin___${vm.$i18n.locale}` })
+  //     }
+  //   })
+  // },
   data () {
     let defaultData = {
       handling_fee: 0,
@@ -357,42 +365,47 @@ export default {
       let totalPrice = 0
       let totalHandlingFee = 0
 
-      this.customerData.cart.forEach((_cart, index) => {
-        let cartPrice = 0
-        let discountedAmount = 0
-        _cart.is_discount = false
-        if (_cart.product_id) {
-          delete _cart.handling_fee
+      if (this.customerData) {
+        this.customerData.cart.forEach((_cart, index) => {
+          let cartPrice = 0
+          let discountedAmount = 0
+          _cart.is_discount = false
+          if (_cart.product_id) {
+            delete _cart.handling_fee
 
-          _cart = { ..._cart, ..._cart.product_id }
+            _cart = { ..._cart, ..._cart.product_id }
 
-          let cartCalObj = this.productPriceCalculation(_cart, _cart.adult_quantity, _cart.child_quantity)
-          cartPrice = Number(cartCalObj.totalPrice)
-          _cart.adult_discount_amount = cartCalObj.adultDiscountedAmount
-          _cart.child_discount_amount = cartCalObj.childDiscountedAmount
-          _cart.adult_unit_price = cartCalObj.adultUnitPrice
-          _cart.child_unit_price = cartCalObj.childUnitPrice
+            let cartCalObj = this.productPriceCalculation(_cart, _cart.adult_quantity, _cart.child_quantity)
+            cartPrice = Number(cartCalObj.totalPrice)
+            _cart.adult_discount_amount = cartCalObj.adultDiscountedAmount
+            _cart.child_discount_amount = cartCalObj.childDiscountedAmount
+            _cart.adult_unit_price = cartCalObj.adultUnitPrice
+            _cart.child_unit_price = cartCalObj.childUnitPrice
 
-          discountedAmount = cartCalObj.adultDiscountedAmount + cartCalObj.childDiscountedAmount
-          if (discountedAmount > 0) {
-            _cart.is_discount = true
+            discountedAmount = cartCalObj.adultDiscountedAmount + cartCalObj.childDiscountedAmount
+            if (discountedAmount > 0) {
+              _cart.is_discount = true
+            }
+            if (_cart.product_id.handling_fee) {
+              totalHandlingFee += _cart.product_id.handling_fee
+            }
+            totalPrice += cartPrice
+            _cart.cart_price = cartPrice
+            _cart.discounted_amount = discountedAmount
           }
-          if (_cart.product_id.handling_fee) {
-            totalHandlingFee += _cart.product_id.handling_fee
-          }
-          totalPrice += cartPrice
-          _cart.cart_price = cartPrice
-          _cart.discounted_amount = discountedAmount
-        }
-        cart.push(_cart)
-      })
-      this.handling_fee = totalHandlingFee
-      this.subtotal = totalPrice
-      this.total_amount = this.handling_fee + this.subtotal
+          cart.push(_cart)
+        })
+        this.handling_fee = totalHandlingFee
+        this.subtotal = totalPrice
+        this.total_amount = this.handling_fee + this.subtotal
+      }
       return cart
     }
   },
   created () {
+    // if (!this.$auth.user) {
+    //   this.$router.push({ name: `signin___${this.$i18n.locale}` })
+    // }
   },
   methods: {
     checkout () {
