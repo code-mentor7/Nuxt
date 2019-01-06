@@ -107,8 +107,12 @@ const mixins = {
   setMetaSEOHead (title, description, ogTitle, ogDescription, ogType, ogImage) {
     return {
       title: title || "96Travel",
-      description: description || "Affordable and cheap hotels booking, up to 80% off ! Come Travel provides you with the BEST PRICE and BOOST your whole travel experience.",
       meta: [
+        {
+          hid: "description",
+          name: "description",
+          content: description || "Affordable and cheap hotels booking, up to 80% off ! Come Travel provides you with the BEST PRICE and BOOST your whole travel experience."
+        },
         {
           name: "og:title",
           content: ogTitle || "96Travel"

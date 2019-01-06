@@ -422,10 +422,11 @@ export default {
     checkPathForFont () {
       return (
         this.$route.path !== "/" &&
-        this.$route.path !== "/signin" &&
-        this.$route.path !== "/signup" &&
-        this.$route.path !== "/forgot-password" &&
-        this.$route.path !== "/resend-verification" &&
+        this.$route.path !== "/zh" &&
+        this.$route.path.indexOf("signin") === -1 &&
+        this.$route.path.indexOf("signup") === -1 &&
+        this.$route.path.indexOf("forgot-password") === -1 &&
+        this.$route.path.indexOf("resend-verification") === -1 &&
         this.$route.path.indexOf("reset-password") === -1
       )
     },
