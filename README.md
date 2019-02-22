@@ -21,4 +21,4 @@
 - [x] optimize mongoose find and count ? https://mongoosejs.com/docs/api.html#model_Model.countDocuments
 - [x] error not found page
 - [x] loading: https://github.com/nuxt/nuxt.js/tree/dev/examples/custom-loading
-- [x] migrate db
+- [x] migrate db"# Nuxt-ForUser-" 
