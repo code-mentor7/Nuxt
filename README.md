@@ -22,3 +22,4 @@
 - [x] error not found page
 - [x] loading: https://github.com/nuxt/nuxt.js/tree/dev/examples/custom-loading
 - [x] migrate db"# Nuxt-ForUser-" 
+"# Nuxt" 
